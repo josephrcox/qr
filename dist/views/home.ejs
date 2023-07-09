@@ -1,0 +1,26 @@
+<h3>Create a new QR Code</h3>
+<div class="creation">
+    <label for="creationUrl">Name of code</label>
+    <input
+        type="text"
+        name="creationName"
+        placeholder="My favorite playlist..."
+        id="creationName"
+    />
+    <label for="creationUrl">Redirect-url</label>
+    <input
+        type="url"
+        name="creationUrl"
+        placeholder="https://..."
+        id="creationUrl"
+    />
+    <br />
+    <button id="creationSubmit">Submit</button>
+</div>
+
+<div class="codes">
+    <h3>My QR Codes</h3>
+    <div id="codesList"></div>
+</div>
+
+<script src="/dist/scripts/frontend/home.js" type="module"></script>

@@ -1,0 +1,36 @@
+login
+
+<!-- input login form with email and password, sending a http post to login on submit -->
+<input type="email" name="email" placeholder="email" />
+<input type="password" name="password" placeholder="password" />
+<input type="submit" value="login" />
+
+<script>
+  const email = document.querySelector('input[name="email"]');
+  const password = document.querySelector('input[name="password"]');
+  const submit = document.querySelector('input[type="submit"]');
+
+  submit.addEventListener("click", (e) => {
+    e.preventDefault();
+    fetch("/api/post/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: email.value,
+        plainTextPassword: password.value,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        if (data.code === 200) {
+          window.location.href = "/";
+        } else {
+          alert(data.error);
+        }
+      })
+      .catch((err) => console.log(err));
+  });
+</script>

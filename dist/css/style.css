@@ -1,0 +1,182 @@
+@font-face {
+    font-family: "localLora";
+    src: url("/dist/fonts/lora.ttf") format("ttf supports variations");
+}
+
+/* General page styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+}
+
+h1,
+h3 {
+    color: #333;
+    text-align: center;
+}
+
+/* Divisions styles */
+div.creation,
+div.codes {
+    background-color: #fff;
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 90%;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Form styles */
+input[type="text"],
+input[type="url"] {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+/* QR Code row styles */
+tr {
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+    /* center item content vertically */
+    vertical-align: middle;
+}
+
+/* center vertically content in rows */
+td {
+    vertical-align: middle;
+}
+
+table .name,
+table .redirectUrl,
+table .visits,
+table .qrCode,
+table .deleteButton {
+    padding: 15px;
+}
+
+table .name {
+    font-weight: bold;
+    color: #333;
+}
+
+table .redirectUrl {
+    color: #007bff;
+    text-decoration: none;
+    /* italic */
+    font-style: italic;
+    font-size: 14px;
+}
+
+table .visits {
+    color: #28a745;
+    text-decoration: none;
+}
+
+table .qrCode img {
+    display: block;
+    max-width: 80px;
+    height: auto;
+    margin: 0 auto;
+}
+
+table .deleteButton {
+    background-color: #dc3545;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    display: block;
+    margin: 0 auto;
+}
+
+table .deleteButton:hover {
+    background-color: #c82333;
+}
+
+button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Table styles */
+table {
+    width: 100%;
+    text-align: left;
+    border-collapse: collapse;
+}
+
+table th,
+table td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+} */
+.table-responsive table {
+    min-width: 600px; /* Adjust as necessary */
+    width: 100%;
+}
+
+.table-responsive th,
+.table-responsive td {
+    min-width: 0;
+}
+
+#codesList {
+    overflow-x: scroll;
+}
+
+/* QR Code styles */
+img {
+    max-width: 100px;
+}
+
+/* Media queries for responsive design */
+@media (max-width: 768px) {
+    div.creation,
+    div.codes {
+        max-width: 100%;
+    }
+
+    table th,
+    table td {
+        padding: 5px;
+        font-size: 14px;
+    }
+
+    input[type="text"],
+    input[type="url"] {
+        font-size: 14px;
+    }
+
+    table .qrCode img {
+        max-width: 60px;
+    }
+
+    button {
+        padding: 10px;
+    }
+
+    img {
+        max-width: 80px;
+    }
+}
