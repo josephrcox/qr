@@ -90,14 +90,31 @@ if (codesData.status === "ok") {
             const file = new File([pngBlob], "qr.png", {
                 type: "image/png",
             });
-            img.addEventListener("click", async (event) => {
+            // on tap or click
+            const shareButton = document.createElement("button");
+            shareButton.innerText = "Share";
+            shareButton.classList.add("shareButton");
+            shareButton.addEventListener("click", async (event) => {
                 event.preventDefault();
-                navigator
-                    .share({
+                if (
+                    navigator.canShare &&
+                    navigator.canShare({ files: [file] })
+                ) {
+                    navigator.share({
                         files: [file],
-                    })
-                    .then(() => console.log("Successful share"))
-                    .catch((error) => console.log("Error sharing", error));
+                        title: "QR Code for " + code.name,
+                        text: "QR Code for " + code.name,
+                    });
+                } else {
+                    alert("fallback");
+                    // fallback
+                    const shareData = {
+                        title: "QR Code for " + code.name,
+                        text: "QR Code for " + code.name,
+                        url: code.code,
+                    };
+                    navigator.share(shareData);
+                }
             });
             qrCode.appendChild(img);
             const deleteButton = document.createElement("button");
