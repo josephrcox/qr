@@ -13,6 +13,12 @@
     const submit = document.querySelector('input[type="submit"]');
     const message = document.querySelector("#message");
 
+    password.addEventListener("keyup", (e) => {
+        if (e.keyCode === 13) {
+            submit.click();
+        }
+    });
+
     submit.addEventListener("click", (e) => {
         e.preventDefault();
         fetch("/api/post/login", {

@@ -2,6 +2,9 @@
 <!-- <%= code %> -->
 <!-- iterate over code.visit_metadata[] -->
 <% for( let index = 0; index < code.visitor_metadata.length; index++ ) { %>
-<p><%= code.visitor_metadata[index].ip %></p>
-<p><%= code.visitor_metadata[index].time %></p>
+<div class="visitLine">
+    <span id="visit"><%= code.visitor_metadata[index].ip %></span>
+    <br />
+    <span id="visittime"><%= code.visitor_metadata[index].time%></span>
+</div>
 <% } %>

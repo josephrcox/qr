@@ -93,7 +93,6 @@ app.get("/code", async (req, res) => {
         res.redirect("/");
         return;
     }
-    console.log(req.hostname["user-agent"]);
     const dbResponse = await Code.findOne({ _id: id });
     if (dbResponse == null) {
         res.redirect("/");

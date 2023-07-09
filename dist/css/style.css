@@ -9,12 +9,37 @@ body {
     margin: 0;
     padding: 0;
     background-color: #f5f5f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.title {
+    text-decoration: none;
+    color: #333;
 }
 
 h1,
 h3 {
     color: #333;
     text-align: center;
+}
+
+h3 {
+    font-size: 1em;
+}
+
+/* tr th */
+tr th {
+    font-weight: 300;
+    color: #333;
+    font-size: 0.7em;
+}
+
+.center {
+    text-align: center;
+    width: 100%;
 }
 
 /* Divisions styles */
@@ -40,6 +65,30 @@ input[type="url"] {
     margin-top: 10px;
 }
 
+/* Visitor metadata styles */
+.visitLine {
+    background-color: #fff;
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 500px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.visitLine #visit {
+    display: block;
+    font-weight: bold;
+    color: #333;
+    font-size: 1.2em;
+}
+
+.visitLine #visittime {
+    display: block;
+    font-size: 0.9em;
+    color: #555;
+    margin-top: 10px;
+}
+
 /* QR Code row styles */
 tr {
     border-bottom: 1px solid #ddd;
@@ -62,8 +111,9 @@ table .deleteButton {
 }
 
 table .name {
-    font-weight: bold;
+    font-weight: 300;
     color: #333;
+    font-size: 0.7em;
 }
 
 table .redirectUrl {
@@ -144,7 +194,7 @@ table td {
 
 #codesList {
     overflow-x: scroll;
-    width: 98vw;
+    width: 100%;
 }
 
 /* QR Code styles */

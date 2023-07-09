@@ -22,7 +22,6 @@
     "jsonwebtoken": "^9.0.1",
     "mongoose": "^7.3.2",
     "path": "^0.12.7",
-    "qr-image": "^3.2.0",
     "qrcode": "^1.5.3",
     "ua-parser-js": "^1.0.35"
   }
