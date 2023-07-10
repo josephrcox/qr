@@ -134,19 +134,11 @@ app.post("/api/post/createcode/", isAuth, async (req, res) => {
     const { redirect_url, name } = req.body;
 
     const currentUser = await getUserData(req);
-    console.log(currentUser);
     const dbResponse = await Code.create({
         redirect_url: redirect_url,
         name: name,
         owner: currentUser,
     });
-    const currentBaseDomain = req.headers.host;
-    console.log(currentBaseDomain);
-    const code = await QRCode.toDataURL(
-        currentBaseDomain + "/code?id=" + dbResponse._id
-    );
-    dbResponse.code = code;
-    await dbResponse.save();
 
     res.json({ status: "ok", code: 200, data: dbResponse.code });
 });
@@ -167,8 +159,17 @@ app.post("/api/post/deletecode/", isAuth, async (req, res) => {
 //// Returns all of the codes created by the current user
 app.get("/api/get/codes", isAuth, async (req, res) => {
     const currentUser = await getUserData(req);
-    const dbResponse = await Code.find({ owner: currentUser });
-    res.json({ status: "ok", code: 200, data: dbResponse });
+    const codes = await Code.find({ owner: currentUser });
+    const currentBaseDomain = req.headers.host;
+
+    let cleanCodes = codes;
+    for (let i = 0; i < codes.length; i++) {
+        cleanCodes[i].code = await QRCode.toDataURL(
+            currentBaseDomain + "/code?id=" + cleanCodes[i]._id
+        );
+    }
+
+    res.json({ status: "ok", code: 200, data: cleanCodes });
 });
 
 //// Takes an email + pw and logs in or creates a new user
@@ -253,7 +254,7 @@ app.get("*", (req, res) => {
     res.redirect("/");
 });
 
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 8181;
 
 app.listen(port, () => {
     console.log("Listening on port", port);

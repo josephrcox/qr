@@ -135,7 +135,21 @@ if (codesData.status === "ok") {
                 // open link in new tab
                 const baseUrl = window.location.href.split("/")[2];
                 const url = `${baseUrl}/code?id=${code._id}`;
-                window.open(url, "_blank");
+                navigator.clipboard.writeText(url);
+                const dialog = document.createElement("dialog");
+                dialog.id = "dialog";
+                dialog.classList.add("dialog");
+                const dialogContent = document.createElement("div");
+                dialogContent.classList.add("dialogContent");
+                const dialogHTML = document.createElement("div");
+                dialogHTML.innerHTML = `
+                    <p> Copied to clipboard </p>
+                    <button onclick="this.parentElement.parentElement.parentElement.close()">Close</button>
+                `;
+                dialogContent.appendChild(dialogHTML);
+                dialog.appendChild(dialogContent);
+                document.body.appendChild(dialog);
+                dialog.showModal();
             });
 
             buttonsTD.appendChild(deleteButton);
