@@ -6,8 +6,6 @@ const creationSubmit = document.getElementById("creationSubmit");
 const message = document.querySelector("#message");
 
 creationSubmit.addEventListener("click", async (event) => {
-    console.log("test 2");
-    // prevent
     event.preventDefault();
     // api/post/createcode
     const redirect_url = creationUrl.value;

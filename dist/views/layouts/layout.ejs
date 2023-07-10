@@ -7,8 +7,16 @@
         <link rel="stylesheet" type="text/css" href="/dist/css/style.css" />
     </head>
     <body>
-        <h1><a href="/" class="title">qr code app</a></h1>
+        <img src="/dist/logo.svg" alt="quality codes logo" id="logo" />
         <br />
+        <span id="subtitle">High quality QR codes with free tracking </span>
         <%- body %>
+
+        <script>
+            const logo = document.getElementById("logo");
+            logo.addEventListener("click", () => {
+                window.location.href = "/";
+            });
+        </script>
     </body>
 </html>

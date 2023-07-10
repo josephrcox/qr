@@ -13,6 +13,26 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    /* hide horizontal scrollbars */
+}
+
+#subtitle {
+    color: #b8b8b8;
+    font-weight: lighter;
+    font-size: 13px;
+    padding-top: 7px;
+    border-bottom: 1px solid #47474721;
+    padding-bottom: 2px;
+    font-style: italic;
+}
+
+#logo {
+    width: 440px;
+    height: auto;
+    margin: 0 auto;
+    display: block;
+    max-width: 70%;
+    cursor: pointer;
 }
 
 .title {
@@ -28,6 +48,8 @@ h3 {
 
 h3 {
     font-size: 1em;
+    margin: auto;
+    padding-bottom: 16px;
 }
 
 /* tr th */
@@ -75,20 +97,38 @@ input[type="url"] {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.visitLine #visit {
+.visitLine ol {
+    list-style-type: decimal;
+}
+
+.visitList {
+    padding-left: 0px;
+}
+
+.visitLine ol li {
+    display: list-item;
+}
+
+ol li {
+    list-style: decimal;
+    list-style-position: inside;
+}
+
+ul {
+    list-style-position: inside;
+}
+
+ol li {
+    display: list-item;
+}
+
+.visitLine > span,
+.visitDetail {
     display: block;
-    font-weight: bold;
     color: #333;
-    font-size: 1.2em;
+    font-size: 0.8em;
+    padding-bottom: 3px;
 }
-
-.visitLine #visittime {
-    display: block;
-    font-size: 0.9em;
-    color: #555;
-    margin-top: 10px;
-}
-
 /* QR Code row styles */
 tr {
     border-bottom: 1px solid #ddd;
@@ -178,10 +218,6 @@ table td {
     border-bottom: 1px solid #ddd;
 }
 
-/* .table-responsive {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-} */
 .table-responsive table {
     min-width: 600px; /* Adjust as necessary */
     width: 90%;
@@ -197,15 +233,14 @@ table td {
     width: 100%;
 }
 
-/* QR Code styles */
-img {
-    max-width: 100px;
+.qrCode {
+    width: 100px;
 }
 
 /* Login form styles */
 .login-form {
     background-color: #fff;
-
+    margin-top: 30px;
     padding: 20px;
     max-width: 400px; /* You can adjust this according to your needs */
     border-radius: 10px;
@@ -224,8 +259,8 @@ img {
 }
 
 label {
-    font-size: 12px;
-    color: #3e3e3e;
+    font-size: 0.7em;
+    color: #333;
     margin-bottom: 10px;
 }
 
@@ -269,6 +304,14 @@ label {
     margin-bottom: 20px;
 }
 
+@media (min-width: 768px) {
+    #codesList {
+        overflow-x: hidden;
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
+    }
+}
+
 /* Media queries for responsive design */
 @media (max-width: 768px) {
     div.creation,
@@ -286,6 +329,10 @@ label {
     input[type="text"],
     input[type="url"] {
         font-size: 14px;
+    }
+
+    #codesList {
+        overflow-x: scroll;
     }
 
     table .qrCode img {

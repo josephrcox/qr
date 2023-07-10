@@ -1,10 +1,45 @@
 <!-- Purpose: Explore code visitor metadata -->
 <!-- <%= code %> -->
-<!-- iterate over code.visit_metadata[] -->
-<% for( let index = 0; index < code.visitor_metadata.length; index++ ) { %>
+<!-- iterate over code.visit_metadata[] and group by IP -->
+<% let groupedVisits = {}; %> <% for( let index = 0; index <
+code.visitor_metadata.length; index++ ) { %> <% let currentIp =
+code.visitor_metadata[index].ip.replace(/^::ffff:/, ""); %> <%
+if(!groupedVisits[currentIp]) { %> <% groupedVisits[currentIp] = {count: 0,
+visits: []}; %> <% } %> <% groupedVisits[currentIp].count++; %> <%
+groupedVisits[currentIp].visits.push(code.visitor_metadata[index]); %> <% } %>
+
+<!-- Display grouped visit data -->
+<% for(let ip in groupedVisits) { %>
 <div class="visitLine">
-    <span id="visit"><%= code.visitor_metadata[index].ip %></span>
-    <br />
-    <span id="visittime"><%= code.visitor_metadata[index].time%></span>
+    <span class="ip"
+        >IP Address: <%= ip %> - <%= groupedVisits[ip].count %> scan<%
+        if(groupedVisits[ip].count > 1) { %>s<% } %>
+    </span>
+    <ol class="visitList">
+        <% for(let visit of groupedVisits[ip].visits) { %>
+        <li class="visitDetail">
+            <span class="time"><%= visit.time %></span> -
+            <span class="browser"><%= visit.browser %> on <%= visit.os %></span>
+            <% if (visit.user_city != "undefined") { %>
+            <span class="location">
+                (<%= visit.user_city %>, <%= visit.user_country %>)</span
+            >
+            <% } %>
+        </li>
+        <% } %>
+    </ol>
 </div>
 <% } %>
+
+<script>
+    const visitLines = document.querySelectorAll(".visitLine");
+    for (let i = 0; i < visitLines.length; i++) {
+        const times = visitLines[i].querySelectorAll(".time");
+        for (let j = 0; j < times.length; j++) {
+            const newTimeStamp =
+                new Date(times[j].innerHTML).toLocaleString() +
+                " (your timezone)";
+            times[j].innerHTML = newTimeStamp;
+        }
+    }
+</script>
