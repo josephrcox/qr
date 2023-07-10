@@ -252,6 +252,15 @@ label {
     margin-bottom: 10px;
 }
 
+.messageDiv {
+    background-color: white;
+    margin: 10px;
+}
+
+.codeButtons > button {
+    margin: 5px;
+}
+
 /* Page title styles */
 .login-title {
     color: #333;

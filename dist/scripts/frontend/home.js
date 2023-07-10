@@ -3,6 +3,7 @@
 const creationName = document.getElementById("creationName");
 const creationUrl = document.getElementById("creationUrl");
 const creationSubmit = document.getElementById("creationSubmit");
+const message = document.querySelector("#message");
 
 creationSubmit.addEventListener("click", async (event) => {
     console.log("test 2");
@@ -11,6 +12,18 @@ creationSubmit.addEventListener("click", async (event) => {
     // api/post/createcode
     const redirect_url = creationUrl.value;
     const name = creationName.value;
+
+    // validate that it has a name and url and that the url is valid
+    if (redirect_url === "") {
+        return (message.innerText = "Please enter a redirect URL.");
+    }
+    if (name === "") {
+        return (message.innerText = "Please enter a name.");
+    }
+    if (!redirect_url.startsWith("http")) {
+        return (message.innerText = "Please enter a valid URL.");
+    }
+    // send the data to the server
 
     const response = await fetch("/api/post/createcode/", {
         method: "POST",
@@ -90,38 +103,17 @@ if (codesData.status === "ok") {
             const file = new File([pngBlob], "qr.png", {
                 type: "image/png",
             });
-            // on tap or click
-            const shareButton = document.createElement("button");
-            shareButton.innerText = "Share";
-            shareButton.classList.add("shareButton");
-            shareButton.addEventListener("click", async (event) => {
-                event.preventDefault();
-                if (
-                    navigator.canShare &&
-                    navigator.canShare({ files: [file] })
-                ) {
-                    navigator.share({
-                        files: [file],
-                        title: "QR Code for " + code.name,
-                        text: "QR Code for " + code.name,
-                    });
-                } else {
-                    alert("fallback");
-                    // fallback
-                    const shareData = {
-                        title: "QR Code for " + code.name,
-                        text: "QR Code for " + code.name,
-                        url: code.code,
-                    };
-                    navigator.share(shareData);
-                }
-            });
+
             qrCode.appendChild(img);
             const deleteButton = document.createElement("button");
-            const deleteTD = document.createElement("td");
+            const buttonsTD = document.createElement("td");
+            buttonsTD.classList.add("codeButtons");
             deleteButton.classList.add("deleteButton");
             deleteButton.innerText = "Delete";
             deleteButton.addEventListener("click", async (event) => {
+                if (!confirm("Are you sure you want to delete this code?")) {
+                    return;
+                }
                 event.preventDefault();
                 const response = await fetch("/api/post/deletecode/", {
                     method: "POST",
@@ -137,13 +129,25 @@ if (codesData.status === "ok") {
                     document.getElementById(code._id).remove();
                 }
             });
-            deleteTD.appendChild(deleteButton);
+            const testButton = document.createElement("button");
+            testButton.innerText = "Test";
+            testButton.classList.add("testButton");
+            testButton.addEventListener("click", async (event) => {
+                event.preventDefault();
+                // open link in new tab
+                const baseUrl = window.location.href.split("/")[2];
+                const url = `${baseUrl}/code?id=${code._id}`;
+                window.open(url, "_blank");
+            });
+
+            buttonsTD.appendChild(deleteButton);
+            buttonsTD.appendChild(testButton);
 
             row.appendChild(name);
             row.appendChild(redirectTD);
             row.appendChild(visitsTD);
             row.appendChild(qrCode);
-            row.appendChild(deleteTD);
+            row.appendChild(buttonsTD);
 
             table.appendChild(row);
         }
