@@ -98,8 +98,19 @@ if (codesData.status === "ok") {
             // tapping on img should open share
             const pngImg = await fetch(code.code);
             const pngBlob = await pngImg.blob();
-            const file = new File([pngBlob], "qr.png", {
+            const qrCodeImageFile = new File([pngBlob], "qr.png", {
                 type: "image/png",
+            });
+            img.addEventListener("click", async () => {
+                // download qrCodeImageFile
+                const url = window.URL.createObjectURL(qrCodeImageFile);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = "qualitycodesQR.png";
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
             });
 
             qrCode.appendChild(img);

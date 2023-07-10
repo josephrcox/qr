@@ -318,6 +318,7 @@ label {
     div.codes {
         max-width: 90%;
         overflow-x: scroll;
+        min-width: 40%;
     }
 
     table th,
