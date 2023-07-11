@@ -1,30 +1,66 @@
-<div class="creation">
-    <h3>Create a new QR Code</h3>
-    <label for="creationUrl">Name of code</label>
-    <input
-        type="text"
-        name="creationName"
-        placeholder="My favorite playlist..."
-        id="creationName"
-    />
-    <label for="creationUrl">Redirect-url</label>
-    <input
-        type="url"
-        name="creationUrl"
-        placeholder="https://..."
-        id="creationUrl"
-    />
-    <br />
-    <div class="center">
-        <button id="creationSubmit">Submit</button>
+<h3>Create new</h3>
+<div class="creationParent">
+    <div class="creation">
+        <h3>Create a new QR Code</h3>
+        <label for="creationUrl">Name of code</label>
+        <input
+            type="text"
+            name="creationName"
+            placeholder="My favorite playlist..."
+            id="creationName"
+            autocomplete="off"
+        />
+        <label for="creationUrl">Redirect-url</label>
+        <input
+            type="url"
+            name="creationUrl"
+            placeholder="https://..."
+            id="creationUrl"
+            autocomplete="off"
+        />
+        <br />
+        <div class="center">
+            <button id="creationSubmit">Create QR code</button>
+        </div>
+        <div class="messageDiv">
+            <span id="message"></span>
+        </div>
     </div>
-    <div class="messageDiv">
-        <span id="message"></span>
+
+    <div class="createalink">
+        <div>
+            <h3>Create a new link</h3>
+            <div id="tooltip">https://quality.codes/link/fp2arT</div>
+        </div>
+
+        <label for="creationUrl">Name of link</label>
+        <input
+            type="text"
+            name="creationName"
+            placeholder="My favorite playlist..."
+            id="creationNameLink"
+            autocomplete="off"
+        />
+        <label for="creationUrl">Redirect-url</label>
+        <input
+            type="url"
+            name="creationUrl"
+            placeholder="https://..."
+            id="creationUrlLink"
+            autocomplete="off"
+        />
+        <div class="center">
+            <button id="creationSubmitLink">Create trackable link</button>
+        </div>
+
+        <div class="messageDiv">
+            <span id="messageLink"></span>
+        </div>
     </div>
 </div>
 
 <div class="codes">
-    <h3>My codes</h3>
+    <h3>My Codes</h3>
     <div id="codesList"></div>
 </div>
 

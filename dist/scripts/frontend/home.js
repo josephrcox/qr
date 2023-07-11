@@ -5,13 +5,15 @@ const creationUrl = document.getElementById("creationUrl");
 const creationSubmit = document.getElementById("creationSubmit");
 const message = document.querySelector("#message");
 
+const creationNameLink = document.getElementById("creationNameLink");
+const creationUrlLink = document.getElementById("creationUrlLink");
+const creationSubmitLink = document.getElementById("creationSubmitLink");
+
 creationSubmit.addEventListener("click", async (event) => {
     event.preventDefault();
-    // api/post/createcode
     const redirect_url = creationUrl.value;
     const name = creationName.value;
 
-    // validate that it has a name and url and that the url is valid
     if (redirect_url === "") {
         return (message.innerText = "Please enter a redirect URL.");
     }
@@ -21,8 +23,29 @@ creationSubmit.addEventListener("click", async (event) => {
     if (!redirect_url.startsWith("http")) {
         return (message.innerText = "Please enter a valid URL.");
     }
-    // send the data to the server
 
+    await createCode("qr", name, redirect_url);
+});
+
+creationSubmitLink.addEventListener("click", async (event) => {
+    event.preventDefault();
+    const redirect_url = creationUrlLink.value;
+    const name = creationNameLink.value;
+
+    if (redirect_url === "") {
+        return (message.innerText = "Please enter a redirect URL.");
+    }
+    if (name === "") {
+        return (message.innerText = "Please enter a name.");
+    }
+    if (!redirect_url.startsWith("http")) {
+        return (message.innerText = "Please enter a valid URL.");
+    }
+
+    await createCode("link", name, redirect_url);
+});
+
+async function createCode(type, name, redirect_url) {
     const response = await fetch("/api/post/createcode/", {
         method: "POST",
         headers: {
@@ -31,15 +54,17 @@ creationSubmit.addEventListener("click", async (event) => {
         body: JSON.stringify({
             redirect_url: redirect_url,
             name: name,
+            type: type,
         }),
     });
     const data = await response.json();
     if (data.status === "ok") {
         window.location.reload();
     }
-});
+}
 
 const codesList = document.getElementById("codesList");
+codesList.innerHTML = "Loading your codes...";
 
 const codesResponse = await fetch("/api/get/codes", {
     method: "GET",
@@ -48,76 +73,43 @@ const codesResponse = await fetch("/api/get/codes", {
     },
 });
 const codesData = await codesResponse.json();
+
 if (codesData.status === "ok") {
+    codesList.innerHTML = "";
     if (codesData.data.length === 0) {
         const noCodes = document.createElement("p");
-        noCodes.innerText = "No codes yet!";
+        noCodes.innerText = "No codes yet! Try creating one :)";
         codesList.appendChild(noCodes);
     } else {
-        const table = document.createElement("table");
-        // columns for name, redirect_url, visits, and qr code image
-        const headerRow = document.createElement("tr");
-        const nameHeader = document.createElement("th");
-        nameHeader.innerText = "Name";
-        const redirectUrlHeader = document.createElement("th");
-        redirectUrlHeader.innerText = "Redirect URL";
-        const visitsHeader = document.createElement("th");
-        visitsHeader.innerText = "Visits";
-        const qrCodeHeader = document.createElement("th");
-        qrCodeHeader.innerText = "QR Code";
-        headerRow.appendChild(nameHeader);
-        headerRow.appendChild(redirectUrlHeader);
-        headerRow.appendChild(visitsHeader);
-        headerRow.appendChild(qrCodeHeader);
-        table.appendChild(headerRow);
-        table.classList.add("table-responsive");
         for (const code of codesData.data) {
-            const row = document.createElement("tr");
-            row.id = code._id;
-            const name = document.createElement("td");
+            const card = document.createElement("div");
+            card.classList.add("card");
+
+            const cardBody = document.createElement("div");
+            cardBody.classList.add("card-body");
+
+            const cardTitleDiv = document.createElement("div");
+            cardTitleDiv.style.display = "flex";
+            cardTitleDiv.style.flexDirection = "row";
+            cardTitleDiv.style.alignItems = "center";
+            cardTitleDiv.style.gap = "5px";
+            const name = document.createElement("h5");
             name.innerText = code.name;
-            name.classList.add("name");
+            name.classList.add("card-title");
+
             const redirectUrl = document.createElement("a");
-            const redirectTD = document.createElement("td");
-            redirectUrl.classList.add("redirectUrl");
-            // prettify the url and just show the domain and a few characters
+            redirectUrl.classList.add("card-link");
             redirectUrl.innerText =
                 new URL(code.redirect_url).hostname + "/...";
             redirectUrl.href = code.redirect_url;
-            redirectTD.appendChild(redirectUrl);
-            const visits = document.createElement("a");
-            const visitsTD = document.createElement("td");
-            visits.innerText = code.visits;
-            visits.classList.add("visits");
-            visitsTD.appendChild(visits);
-            visits.href = `/explore?id=${code._id}`;
-            const qrCode = document.createElement("td");
-            const img = document.createElement("img");
-            img.classList.add("qrCode");
-            img.src = code.code;
-            // tapping on img should open share
-            const pngImg = await fetch(code.code);
-            const pngBlob = await pngImg.blob();
-            const qrCodeImageFile = new File([pngBlob], "qr.png", {
-                type: "image/png",
-            });
-            img.addEventListener("click", async () => {
-                // download qrCodeImageFile
-                const url = window.URL.createObjectURL(qrCodeImageFile);
-                const a = document.createElement("a");
-                a.href = url;
-                a.download = "qualitycodesQR.png";
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
-                window.URL.revokeObjectURL(url);
-            });
 
-            qrCode.appendChild(img);
+            const currentBaseURL = window.location.href.split("/")[2];
+            const visits = document.createElement("p");
+            visits.innerHTML = `Visits: <a href='/explore/${code.short_id}'>${code.visits}</a>`;
+            visits.classList.add("card-text");
+
             const deleteButton = document.createElement("button");
-            const buttonsTD = document.createElement("td");
-            buttonsTD.classList.add("codeButtons");
-            deleteButton.classList.add("deleteButton");
+            deleteButton.classList.add("btn", "btn-danger");
             deleteButton.innerText = "Delete";
             deleteButton.addEventListener("click", async (event) => {
                 if (!confirm("Are you sure you want to delete this code?")) {
@@ -138,14 +130,18 @@ if (codesData.status === "ok") {
                     document.getElementById(code._id).remove();
                 }
             });
-            const testButton = document.createElement("button");
-            testButton.innerText = "Test";
-            testButton.classList.add("testButton");
-            testButton.addEventListener("click", async (event) => {
+
+            const testLinkButton = document.createElement("button");
+            testLinkButton.classList.add("btn", "btn-primary");
+            testLinkButton.innerText = "Copy Link";
+            testLinkButton.addEventListener("click", async (event) => {
                 event.preventDefault();
-                // open link in new tab
-                const baseUrl = window.location.href.split("/")[2];
-                const url = `${baseUrl}/code?id=${code._id}`;
+                let url;
+                if (code.type == "qr") {
+                    url = `${currentBaseURL}/code?id=${code._id}`;
+                } else {
+                    url = url = `${currentBaseURL}/link/${code.short_id}`;
+                }
                 navigator.clipboard.writeText(url);
                 const dialog = document.createElement("dialog");
                 dialog.id = "dialog";
@@ -163,17 +159,61 @@ if (codesData.status === "ok") {
                 dialog.showModal();
             });
 
-            buttonsTD.appendChild(deleteButton);
-            buttonsTD.appendChild(testButton);
+            if (code.type === "qr") {
+                const img = document.createElement("img");
+                img.src = code.code;
+                img.classList.add("card-img-top");
+                const pngImg = await fetch(code.code);
+                const pngBlob = await pngImg.blob();
+                const qrCodeImageFile = new File([pngBlob], "qr.png", {
+                    type: "image/png",
+                });
+                img.addEventListener("click", async () => {
+                    const url = window.URL.createObjectURL(qrCodeImageFile);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = "qualitycodesQR.png";
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+                });
+                cardTitleDiv.appendChild(img);
+            }
 
-            row.appendChild(name);
-            row.appendChild(redirectTD);
-            row.appendChild(visitsTD);
-            row.appendChild(qrCode);
-            row.appendChild(buttonsTD);
+            cardTitleDiv.appendChild(name);
+            cardBody.appendChild(cardTitleDiv);
+            cardBody.appendChild(redirectUrl);
+            cardBody.appendChild(visits);
 
-            table.appendChild(row);
+            deleteButton.addEventListener("click", async (event) => {
+                if (!confirm("Are you sure you want to delete this code?")) {
+                    return;
+                }
+                event.preventDefault();
+                const response = await fetch("/api/post/deletecode/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        id: code._id,
+                    }),
+                });
+                const data = await response.json();
+                if (data.status === "ok") {
+                    document.getElementById(code._id).remove();
+                }
+            });
+
+            cardBody.appendChild(deleteButton);
+            cardBody.appendChild(testLinkButton);
+            card.appendChild(cardBody);
+
+            codesList.appendChild(card);
+            setTimeout(function () {
+                card.classList.add("card-show");
+            }, 100);
         }
-        codesList.appendChild(table);
     }
 }

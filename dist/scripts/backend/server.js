@@ -129,15 +129,77 @@ app.get("/code", async (req, res) => {
     res.redirect(dbResponse.redirect_url);
 });
 
+//// Takes an id, looks up the code and redirects the user after changing the visits
+app.get("/link/:shortid", async (req, res) => {
+    const id = req.params.shortid;
+    if (id == undefined) {
+        res.redirect("/");
+        return;
+    }
+    const dbResponse = await Code.findOne({ short_id: id });
+    if (dbResponse == null) {
+        res.redirect("/");
+        return;
+    }
+    dbResponse.visits += 1;
+    var ua = parser(req.headers["user-agent"]);
+    console.log(ua);
+    let user_country = "undefined";
+    let user_city = "undefined";
+    let user_region = "undefined";
+    try {
+        let userdata = await getgeoip(req.ip);
+        if (userdata.country_name != undefined) {
+            user_country = userdata.country_name;
+            user_city = userdata.city;
+            user_region = userdata.region;
+        }
+    } catch (e) {
+        console.log(e);
+    }
+
+    dbResponse.visitor_metadata.push({
+        ip: req.ip,
+        time: new Date(),
+        browser: ua.browser.name,
+        os: ua.os.name,
+        device: ua.device.model,
+        user_country: user_country,
+        user_city: user_city,
+        user_region: user_region,
+    });
+    await dbResponse.save();
+    res.redirect(dbResponse.redirect_url);
+});
+
 //// Takes some new code data, creates a new code, and returns the base64
 app.post("/api/post/createcode/", isAuth, async (req, res) => {
-    const { redirect_url, name } = req.body;
+    const { redirect_url, name, type } = req.body;
 
     const currentUser = await getUserData(req);
+    // generate a short id that has not been used already in other codes
+    let continueTrying = true;
+    let short_id = "";
+    while (continueTrying) {
+        let possible =
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        for (let i = 0; i < 6; i++) {
+            short_id += possible.charAt(
+                Math.floor(Math.random() * possible.length)
+            );
+        }
+        const existingCode = await Code.findOne({ short_id: short_id });
+        if (existingCode == null) {
+            continueTrying = false;
+        }
+    }
+
     const dbResponse = await Code.create({
         redirect_url: redirect_url,
         name: name,
+        short_id: short_id,
         owner: currentUser,
+        type: type.toLowerCase(),
     });
 
     res.json({ status: "ok", code: 200, data: dbResponse.code });
@@ -164,9 +226,11 @@ app.get("/api/get/codes", isAuth, async (req, res) => {
 
     let cleanCodes = codes;
     for (let i = 0; i < codes.length; i++) {
-        cleanCodes[i].code = await QRCode.toDataURL(
-            currentBaseDomain + "/code?id=" + cleanCodes[i]._id
-        );
+        if (codes[i].type == "qr") {
+            cleanCodes[i].code = await QRCode.toDataURL(
+                currentBaseDomain + "/code?id=" + cleanCodes[i]._id
+            );
+        }
     }
 
     res.json({ status: "ok", code: 200, data: cleanCodes });
@@ -231,14 +295,16 @@ app.post("/api/post/login", async (req, res) => {
 });
 
 //// Takes a code ID and returns the code data
-app.get("/explore", isAuth, async (req, res) => {
-    const { id } = req.body;
+app.get("/explore/:id", isAuth, async (req, res) => {
+    const { id } = req.params;
     const currentUser = await getUserData(req);
-    const code = await Code.findOne({ id: id });
+    const code = await Code.findOne({ short_id: id });
+    console.log(code);
     if (code == null || code.owner != currentUser) {
         res.redirect("/");
         return;
     }
+
     res.render("explore.ejs", { code: code });
 });
 

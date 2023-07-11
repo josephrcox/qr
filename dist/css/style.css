@@ -22,7 +22,7 @@ body {
     font-size: 13px;
     padding-top: 7px;
     border-bottom: 1px solid #47474721;
-    padding-bottom: 2px;
+    padding-bottom: 8px;
     font-style: italic;
 }
 
@@ -49,7 +49,8 @@ h3 {
 h3 {
     font-size: 1em;
     margin: auto;
-    padding-bottom: 16px;
+    padding-bottom: 9px;
+    padding-top: 9px;
 }
 
 /* tr th */
@@ -64,15 +65,46 @@ tr th {
     width: 100%;
 }
 
+#tooltip {
+    font-weight: 100;
+    font-size: 12px;
+    font-style: italic;
+    padding-bottom: 3px;
+    color: #7954ff;
+    background-color: #eae4ff;
+    padding: 5px;
+    text-align: center;
+    margin-bottom: 7px;
+    border-radius: 7px;
+    /* no select */
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+.creationParent {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    gap: 20px;
+    overflow-x: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    text-align: center;
+    padding: 10px; /* adjust as needed */
+}
+
 /* Divisions styles */
 div.creation,
-div.codes {
+div.createalink {
     background-color: #fff;
-    margin: 20px auto;
-    padding: 20px;
+    padding: 5px;
     max-width: 90%;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    min-width: 210px;
+    text-align: initial;
 }
 
 /* Form styles */
@@ -84,7 +116,7 @@ input[type="url"] {
     margin-bottom: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
-    margin-top: 10px;
+    margin-top: 7px;
 }
 
 /* Visitor metadata styles */
@@ -142,12 +174,30 @@ td {
     vertical-align: middle;
 }
 
+.header {
+    margin-bottom: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+
 table .name,
 table .redirectUrl,
 table .visits,
-table .qrCode,
 table .deleteButton {
     padding: 15px;
+}
+
+.codeButtons {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+.subButtons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 table .name {
@@ -179,7 +229,19 @@ table .qrCode img {
 table .deleteButton {
     background-color: #dc3545;
     color: #fff;
-    padding: 10px 15px;
+    padding: 6px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    display: block;
+    margin: 0 auto;
+}
+
+table .testButton {
+    background-color: #055fa4;
+    color: #fff;
+    padding: 6px 10px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -215,7 +277,6 @@ table {
 table th,
 table td {
     padding: 10px;
-    border-bottom: 1px solid #ddd;
 }
 
 .table-responsive table {
@@ -231,6 +292,10 @@ table td {
 #codesList {
     overflow-x: scroll;
     width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 30px;
 }
 
 .qrCode {
@@ -260,7 +325,7 @@ table td {
 
 label {
     font-size: 0.7em;
-    color: #333;
+    color: #33333373;
     margin-bottom: 10px;
 }
 
@@ -293,7 +358,7 @@ label {
 }
 
 .codeButtons > button {
-    margin: 5px;
+    margin: 4px;
 }
 
 /* Page title styles */
@@ -304,21 +369,51 @@ label {
     margin-bottom: 20px;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 501px) {
     #codesList {
         overflow-x: hidden;
         -ms-overflow-style: none; /* IE and Edge */
         scrollbar-width: none; /* Firefox */
     }
+    .card {
+        max-width: 150px;
+    }
 }
 
 /* Media queries for responsive design */
-@media (max-width: 768px) {
-    div.creation,
-    div.codes {
-        max-width: 90%;
+@media (max-width: 500px) {
+    .creationParent {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        gap: 20px;
         overflow-x: scroll;
+        justify-items: center;
+        width: 100%;
+        align-content: center;
+        align-items: center;
+    }
+    /* creationParent children */
+    .creation,
+    .createalink {
+        min-width: 210px;
+        max-width: 80%;
+    }
+    .card {
+        width: 80%;
+        max-width: none;
+    }
+    div.creation,
+    div.codes,
+    div.createalink {
+        width: 80%;
+        max-width: 340px;
+    }
+
+    div.codes {
+        max-width: 81%;
         min-width: 40%;
+        margin-inline: 10px;
     }
 
     table th,
@@ -347,4 +442,71 @@ label {
     img {
         max-width: 80px;
     }
+}
+
+.card {
+    background-color: #fff;
+    margin: 11px auto;
+    padding: 20px;
+    max-width: 500px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+
+    transform-origin: top;
+    transition: transform 0.7s ease;
+    transform: scaleY(0);
+}
+
+.card-show {
+    transform: scaleY(1);
+}
+
+.card-img-top {
+    width: 30%;
+    height: 30%;
+    min-width: 50px;
+    margin-bottom: 7px;
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.card-title {
+    margin-bottom: 20px;
+    font-size: 1.25em;
+    font-weight: bold;
+    margin-top: 0px;
+}
+
+.card-text {
+    margin-bottom: 20px;
+}
+
+.card-link {
+    margin-bottom: 20px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+a {
+    text-decoration: none;
 }
