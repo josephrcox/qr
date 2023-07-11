@@ -83,6 +83,7 @@ if (codesData.status === "ok") {
     } else {
         for (const code of codesData.data) {
             const card = document.createElement("div");
+            card.id = code._id;
             card.classList.add("card");
 
             const cardBody = document.createElement("div");
