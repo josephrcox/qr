@@ -1,7 +1,10 @@
 <h3>Create new</h3>
 <div class="creationParent">
     <div class="creation">
-        <h3>Create a new QR Code</h3>
+        <div>
+            <h3>Create a QR code</h3>
+            <div id="tooltip">Scannable code with tracking</div>
+        </div>
         <label for="creationUrl">Name of code</label>
         <input
             type="text"
@@ -9,6 +12,7 @@
             placeholder="My favorite playlist..."
             id="creationName"
             autocomplete="off"
+            maxlength="20"
         />
         <label for="creationUrl">Redirect-url</label>
         <input
@@ -18,7 +22,6 @@
             id="creationUrl"
             autocomplete="off"
         />
-        <br />
         <div class="center">
             <button id="creationSubmit">Create QR code</button>
         </div>
@@ -40,6 +43,7 @@
             placeholder="My favorite playlist..."
             id="creationNameLink"
             autocomplete="off"
+            maxlength="20"
         />
         <label for="creationUrl">Redirect-url</label>
         <input

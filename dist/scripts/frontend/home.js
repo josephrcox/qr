@@ -186,26 +186,6 @@ if (codesData.status === "ok") {
             cardBody.appendChild(redirectUrl);
             cardBody.appendChild(visits);
 
-            deleteButton.addEventListener("click", async (event) => {
-                if (!confirm("Are you sure you want to delete this code?")) {
-                    return;
-                }
-                event.preventDefault();
-                const response = await fetch("/api/post/deletecode/", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        id: code._id,
-                    }),
-                });
-                const data = await response.json();
-                if (data.status === "ok") {
-                    document.getElementById(code._id).remove();
-                }
-            });
-
             cardBody.appendChild(deleteButton);
             cardBody.appendChild(testLinkButton);
             card.appendChild(cardBody);
