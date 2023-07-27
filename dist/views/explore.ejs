@@ -8,27 +8,32 @@ if(!groupedVisits[currentIp]) { %> <% groupedVisits[currentIp] = {count: 0,
 visits: []}; %> <% } %> <% groupedVisits[currentIp].count++; %> <%
 groupedVisits[currentIp].visits.push(code.visitor_metadata[index]); %> <% } %>
 
-<!-- Display grouped visit data -->
-<% for(let ip in groupedVisits) { %>
-<div class="visitLine">
-    <span class="ip"
-        >IP Address: <%= ip %> - <%= groupedVisits[ip].count %> scan<%
-        if(groupedVisits[ip].count > 1) { %>s<% } %>
-    </span>
-    <ol class="visitList">
-        <% for(let visit of groupedVisits[ip].visits) { %>
-        <li class="visitDetail">
-            <span class="time"><%= visit.time %></span> -
-            <span class="browser"><%= visit.browser %> on <%= visit.os %></span>
-            <% if (visit.user_city != "undefined") { %>
-            <span class="location">
-                (<%= visit.user_city %>, <%= visit.user_country %>)</span
-            >
+<div class="visitLines">
+    <!-- Display grouped visit data -->
+    <% for(let ip in groupedVisits) { %>
+    <div class="visitLine">
+        <span class="ip"
+            >IP Address: <%= ip %> - <%= groupedVisits[ip].count %> scan<%
+            if(groupedVisits[ip].count > 1) { %>s<% } %>
+        </span>
+        <ol class="visitList">
+            <% for(let visit of groupedVisits[ip].visits) { %>
+            <li class="visitDetail">
+                <span class="time"><%= visit.time %></span> -
+                <span class="browser"
+                    ><%= visit.browser %> on <%= visit.os %></span
+                >
+                <% if (visit.user_city != "undefined") { %>
+                <span class="location">
+                    (<%= visit.user_city %>, <%= visit.user_country %>)</span
+                >
+                <% } %>
+            </li>
             <% } %>
-        </li>
-        <% } %>
-    </ol>
+        </ol>
+    </div>
 </div>
+
 <% } %>
 
 <script>

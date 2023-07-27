@@ -3,36 +3,31 @@
     src: url("/dist/fonts/lora.ttf") format("ttf supports variations");
 }
 
+:root {
+    --primaryGreen: #06d6a0;
+    --yellow: #ffd166;
+    --pink: #ef476f;
+    --blue: #118ab2;
+    --darkblue: #073b4c;
+    --lightblue: #aae2f4;
+}
+
+* {
+    font-family: "localLora", fallback, sans-serif;
+}
+
 /* General page styles */
 body {
-    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f5f5f5;
+    background-color: var(--primaryGreen);
     display: flex;
+    color: white;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     /* hide horizontal scrollbars */
-}
-
-#subtitle {
-    color: #b8b8b8;
-    font-weight: lighter;
-    font-size: 13px;
-    padding-top: 7px;
-    border-bottom: 1px solid #47474721;
-    padding-bottom: 8px;
-    font-style: italic;
-}
-
-#logo {
-    width: 440px;
-    height: auto;
-    margin: 0 auto;
-    display: block;
-    max-width: 70%;
-    cursor: pointer;
+    margin-top: 35px;
 }
 
 .title {
@@ -42,7 +37,7 @@ body {
 
 h1,
 h3 {
-    color: #333;
+    color: #fff;
     text-align: center;
 }
 
@@ -81,42 +76,6 @@ tr th {
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
-}
-
-.creationParent {
-    display: flex;
-    justify-content: center;
-    flex-direction: row;
-    gap: 20px;
-    overflow-x: scroll;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-    text-align: center;
-    padding: 10px; /* adjust as needed */
-}
-
-/* Divisions styles */
-div.creation,
-div.createalink {
-    background-color: #fff;
-    padding: 5px;
-    max-width: 90%;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    min-width: 210px;
-    text-align: initial;
-}
-
-/* Form styles */
-input[type="text"],
-input[type="url"] {
-    display: block;
-    width: 90%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    margin-top: 7px;
 }
 
 /* Visitor metadata styles */
@@ -163,7 +122,6 @@ ol li {
 }
 /* QR Code row styles */
 tr {
-    border-bottom: 1px solid #ddd;
     text-align: center;
     /* center item content vertically */
     vertical-align: middle;
@@ -172,25 +130,36 @@ tr {
 /* center vertically content in rows */
 td {
     vertical-align: middle;
+    /*! display: table-cell; */
 }
 
 .header {
-    margin-bottom: 0px;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    width: 100%;
+    background-color: #f4f4f4; /* You can change this to your preferred color */
+    max-height: 30px;
+    /* box shadow */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
 }
 
-table .name,
-table .redirectUrl,
-table .visits,
-table .deleteButton {
-    padding: 15px;
+#logo {
+    /* You can adjust this size based on your preference */
+    max-width: 240px;
+}
+
+#subtitle {
+    font-size: 15px;
+    font-weight: lighter;
+    color: #0000007a; /* You can change this to your preferred color */
 }
 
 .codeButtons {
-    display: flex;
+    /*! display: flex; */
     flex-direction: row;
     gap: 10px;
 }
@@ -200,106 +169,15 @@ table .deleteButton {
     gap: 10px;
 }
 
-table .name {
-    font-weight: 300;
-    color: #333;
-    font-size: 0.7em;
-}
-
-table .redirectUrl {
-    color: #007bff;
-    text-decoration: none;
-    /* italic */
-    font-style: italic;
-    font-size: 14px;
-}
-
-table .visits {
-    color: #28a745;
-    text-decoration: none;
-}
-
-table .qrCode img {
-    display: block;
-    max-width: 80px;
-    height: auto;
-    margin: 0 auto;
-}
-
-table .deleteButton {
-    background-color: #dc3545;
-    color: #fff;
-    padding: 6px 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    text-align: center;
-    display: block;
-    margin: 0 auto;
-}
-
-table .testButton {
-    background-color: #055fa4;
-    color: #fff;
-    padding: 6px 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    text-align: center;
-    display: block;
-    margin: 0 auto;
-}
-
-table .deleteButton:hover {
-    background-color: #c82333;
-}
-
-button {
-    background-color: #007bff;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-
-/* Table styles */
-table {
-    width: 100%;
-    text-align: left;
-    border-collapse: collapse;
-}
-
-table th,
-table td {
-    padding: 10px;
-}
-
-.table-responsive table {
-    min-width: 600px; /* Adjust as necessary */
-    width: 90%;
-}
-
-.table-responsive th,
-.table-responsive td {
-    min-width: 0;
-}
-
 #codesList {
-    overflow-x: scroll;
     width: 100%;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 30px;
+    color: black;
+    /* box shadow */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .qrCode {
-    width: 100px;
+    width: fit-content;
 }
 
 /* Login form styles */
@@ -416,12 +294,6 @@ label {
         margin-inline: 10px;
     }
 
-    table th,
-    table td {
-        padding: 5px;
-        font-size: 14px;
-    }
-
     input[type="text"],
     input[type="url"] {
         font-size: 14px;
@@ -429,10 +301,6 @@ label {
 
     #codesList {
         overflow-x: scroll;
-    }
-
-    table .qrCode img {
-        max-width: 60px;
     }
 
     button {
@@ -464,10 +332,6 @@ label {
 }
 
 .card-img-top {
-    width: 30%;
-    height: 30%;
-    min-width: 50px;
-    margin-bottom: 7px;
     object-fit: contain;
 }
 
@@ -483,6 +347,7 @@ label {
     font-size: 1.25em;
     font-weight: bold;
     margin-top: 0px;
+    color: black;
 }
 
 .card-text {
@@ -503,6 +368,140 @@ label {
     margin-bottom: 10px;
 }
 
+/* CSS */
+
+.creation {
+    max-width: 500px; /* Or adjust to your liking */
+    padding: 20px;
+    background: #ffffff;
+    box-shadow: 0px 18px 9px rgba(0, 0, 0, 0.1); /* Optional: add a shadow for a little "pop" */
+    margin-top: 50px;
+    margin-bottom: 50px;
+    width: 70%;
+    min-width: 150px;
+}
+
+.creation h3 {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+#tooltip {
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 20px;
+}
+
+.creation label {
+    display: block;
+    font-weight: bold;
+    margin-top: 20px;
+    color: #333;
+}
+
+.creation input:focus {
+    border-color: #009688; /* A nice teal color on focus */
+}
+
+.center {
+    text-align: center;
+    margin-top: 20px;
+}
+
+#creationSubmit,
+#creationSubmitLink {
+    padding: 10px 20px;
+    border: none;
+    /* primaryGreen */
+    background-color: var(--pink);
+    color: white;
+    cursor: pointer;
+    border-radius: 4px; /* Matching rounded borders */
+    font-size: 16px;
+}
+
+#creationSubmitLink {
+    background-color: var(--blue);
+}
+
+#creationSubmit:hover {
+    /* darker than --pink */
+    background-color: #d23c5a;
+}
+
+#creationSubmitLink:hover {
+    background-color: #055fa4;
+}
+
+span.hidden {
+    display: block;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-in-out;
+}
+span.show {
+    max-height: 25px; /* Adjust this value as per the size of your hint */
+    color: var(--primaryGreen);
+}
+
+.messageDiv {
+    margin-top: 20px;
+}
+
+#message {
+    color: red;
+}
+
+input,
+textarea {
+    transition: color 0.2s;
+}
+
+/*  */
+
+input:focus,
+textarea:focus {
+    color: #3333338b;
+    outline: none;
+}
+
+textarea {
+    resize: none;
+}
+
+#creationUrl {
+    font-size: 28px;
+    border: none;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-top: 10px;
+    padding-bottom: 20px;
+    height: min-content;
+}
+
+textarea.has-content {
+    color: #00dbff;
+}
+
+#creationName {
+    font-size: 18px;
+    border: none;
+    margin-top: 0px;
+    padding-top: 10px;
+    padding-bottom: 20px;
+    width: 100%;
+}
+
+/*  */
+
+.header div {
+    display: flex;
+    text-align: center;
+    align-items: center;
+    margin-inline: 18px;
+}
+
 .btn-danger {
     background-color: #dc3545;
     color: #fff;
@@ -510,4 +509,52 @@ label {
 
 a {
     text-decoration: none;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    text-align: left;
+    padding-inline: 18px;
+}
+
+.visitLines {
+    margin-top: 35px;
+}
+
+tr {
+    background-color: white;
+}
+
+tr:nth-child(even) {
+    /* alternating with f2f2f2, should constrast lightly */
+    background-color: #f1f1f1;
+}
+
+#headerRow {
+    height: 23px;
+}
+
+.testButton {
+    background-color: #e0e0e0;
+}
+
+.codeButtons .btn {
+    margin: 0 5px;
+}
+
+/* CSS for QR code */
+.qrCode img {
+    height: 49px;
+}
+
+/* center items vertically in all tds in trs */
+tr {
+    text-align: center;
+    /* center item content vertically */
+    vertical-align: middle;
+    height: 80px;
 }

@@ -9,6 +9,30 @@ const creationNameLink = document.getElementById("creationNameLink");
 const creationUrlLink = document.getElementById("creationUrlLink");
 const creationSubmitLink = document.getElementById("creationSubmitLink");
 
+creationUrl.addEventListener("input", function () {
+    if (this.value.trim() !== "") {
+        this.classList.add("has-content");
+    } else {
+        this.classList.remove("has-content");
+    }
+});
+
+creationUrl.addEventListener("focus", function () {
+    document.getElementById("urlHint").classList.add("show");
+});
+
+creationUrl.addEventListener("blur", function () {
+    document.getElementById("urlHint").classList.remove("show");
+});
+
+creationName.addEventListener("focus", function () {
+    document.getElementById("nameHint").classList.add("show");
+});
+
+creationName.addEventListener("blur", function () {
+    document.getElementById("nameHint").classList.remove("show");
+});
+
 creationSubmit.addEventListener("click", async (event) => {
     event.preventDefault();
     const redirect_url = creationUrl.value;
@@ -29,8 +53,8 @@ creationSubmit.addEventListener("click", async (event) => {
 
 creationSubmitLink.addEventListener("click", async (event) => {
     event.preventDefault();
-    const redirect_url = creationUrlLink.value;
-    const name = creationNameLink.value;
+    const redirect_url = creationUrl.value;
+    const name = creationName.value;
 
     if (redirect_url === "") {
         return (message.innerText = "Please enter a redirect URL.");
@@ -81,36 +105,43 @@ if (codesData.status === "ok") {
         noCodes.innerText = "No codes yet! Try creating one :)";
         codesList.appendChild(noCodes);
     } else {
+        const headerRow = document.createElement("tr");
+        headerRow.id = "headerRow";
+        headerRow.insertCell(0).outerHTML = "<th>Name</th>";
+        headerRow.insertCell(1).outerHTML = "<th>Redirect URL</th>";
+        headerRow.insertCell(2).outerHTML = "<th>Visits</th>";
+        headerRow.insertCell(3).outerHTML = "<th>Actions</th>";
+        headerRow.insertCell(4).outerHTML = "<th>QR Code</th>";
+        codesList.appendChild(headerRow);
+
         for (const code of codesData.data) {
-            const card = document.createElement("div");
-            card.id = code._id;
-            card.classList.add("card");
+            const tableRow = document.createElement("tr");
+            tableRow.id = code._id;
+            tableRow.className = "codeRow";
 
-            const cardBody = document.createElement("div");
-            cardBody.classList.add("card-body");
+            // Create table data elements
+            const nameTd = document.createElement("td");
+            nameTd.classList.add("name");
+            nameTd.innerText = code.name;
 
-            const cardTitleDiv = document.createElement("div");
-            cardTitleDiv.style.display = "flex";
-            cardTitleDiv.style.flexDirection = "row";
-            cardTitleDiv.style.alignItems = "center";
-            cardTitleDiv.style.gap = "5px";
-            const name = document.createElement("h5");
-            name.innerText = code.name;
-            name.classList.add("card-title");
-
+            const redirectUrlTd = document.createElement("td");
+            redirectUrlTd.classList.add("redirectUrl");
             const redirectUrl = document.createElement("a");
-            redirectUrl.classList.add("card-link");
             redirectUrl.innerText =
                 new URL(code.redirect_url).hostname + "/...";
             redirectUrl.href = code.redirect_url;
+            redirectUrlTd.appendChild(redirectUrl);
 
             const currentBaseURL = window.location.href.split("/")[2];
-            const visits = document.createElement("p");
-            visits.innerHTML = `Visits: <a href='/explore/${code.short_id}'>${code.visits}</a>`;
-            visits.classList.add("card-text");
+            const visitsTd = document.createElement("td");
+            visitsTd.classList.add("visits");
+            visitsTd.innerHTML = `Visits: <a href='/explore/${code.short_id}'>${code.visits}</a>`;
+
+            const buttonsTd = document.createElement("td");
+            buttonsTd.classList.add("codeButtons");
 
             const deleteButton = document.createElement("button");
-            deleteButton.classList.add("btn", "btn-danger");
+            deleteButton.classList.add("btn", "btn-danger", "deleteButton");
             deleteButton.innerText = "Delete";
             deleteButton.addEventListener("click", async (event) => {
                 if (!confirm("Are you sure you want to delete this code?")) {
@@ -131,9 +162,10 @@ if (codesData.status === "ok") {
                     document.getElementById(code._id).remove();
                 }
             });
+            buttonsTd.appendChild(deleteButton);
 
             const testLinkButton = document.createElement("button");
-            testLinkButton.classList.add("btn", "btn-primary");
+            testLinkButton.classList.add("btn", "btn-primary", "testButton");
             testLinkButton.innerText = "Copy Link";
             testLinkButton.addEventListener("click", async (event) => {
                 event.preventDefault();
@@ -151,15 +183,20 @@ if (codesData.status === "ok") {
                 dialogContent.classList.add("dialogContent");
                 const dialogHTML = document.createElement("div");
                 dialogHTML.innerHTML = `
-                    <p> Copied to clipboard </p>
-                    <button onclick="this.parentElement.parentElement.parentElement.close()">Close</button>
-                `;
+                        <p> Copied to clipboard </p>
+                        <button onclick="this.parentElement.parentElement.parentElement.close()">Close</button>
+                    `;
                 dialogContent.appendChild(dialogHTML);
                 dialog.appendChild(dialogContent);
                 document.body.appendChild(dialog);
                 dialog.showModal();
             });
+            buttonsTd.appendChild(testLinkButton);
 
+            // Append created table data elements to the row
+            tableRow.append(nameTd, redirectUrlTd, visitsTd, buttonsTd);
+            const qrCodeTd = document.createElement("td");
+            qrCodeTd.classList.add("qrCode");
             if (code.type === "qr") {
                 const img = document.createElement("img");
                 img.src = code.code;
@@ -179,22 +216,11 @@ if (codesData.status === "ok") {
                     a.remove();
                     window.URL.revokeObjectURL(url);
                 });
-                cardTitleDiv.appendChild(img);
+                qrCodeTd.appendChild(img);
             }
+            tableRow.appendChild(qrCodeTd);
 
-            cardTitleDiv.appendChild(name);
-            cardBody.appendChild(cardTitleDiv);
-            cardBody.appendChild(redirectUrl);
-            cardBody.appendChild(visits);
-
-            cardBody.appendChild(deleteButton);
-            cardBody.appendChild(testLinkButton);
-            card.appendChild(cardBody);
-
-            codesList.appendChild(card);
-            setTimeout(function () {
-                card.classList.add("card-show");
-            }, 100);
+            codesList.appendChild(tableRow);
         }
     }
 }
