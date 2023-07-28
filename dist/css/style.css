@@ -17,6 +17,32 @@
     font-family: "localLora", fallback, sans-serif;
 }
 
+#upgrade:hover {
+    /* grow */
+    transform: scale(1.5);
+    animation: wiggle 0.3s ease-in-out 2;
+    transform: scale(1);
+}
+
+#upgrade {
+    all: unset;
+    color: #16c149;
+    padding: 5px;
+    background-color: white;
+    border-radius: 5px;
+    font-weight: 500;
+    font-variant: all-small-caps;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+dialog {
+    border-radius: 15px;
+    border: none;
+    /* box shadow */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
 /* General page styles */
 body {
     margin: 0;

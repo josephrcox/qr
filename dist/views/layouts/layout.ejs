@@ -5,23 +5,52 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" type="text/css" href="/dist/css/style.css" />
+        <script async src="https://js.stripe.com/v3/pricing-table.js"></script>
+        <script src="node_modules/confetti-js/dist/index.min.js"></script>
     </head>
     <header class="header">
         <div>
             <img src="/dist/logo.svg" alt="quality codes logo" id="logo" />
         </div>
         <div>
-            <span id="subtitle">High quality QR codes with free tracking </span>
+            <button id="upgrade">Upgrade</button>
+        </div>
+        <div>
+            <span id="subtitle">Fast & Simple QR code + Link Tracking </span>
         </div>
     </header>
     <body>
         <br />
+
         <%- body %>
 
         <script>
             const logo = document.getElementById("logo");
             logo.addEventListener("click", () => {
                 window.location.href = "/";
+            });
+
+            const upgrade = document.getElementById("upgrade");
+            const dialog = document.createElement("dialog");
+            upgrade.addEventListener("click", async () => {
+                // show dialog with html content
+                // showDialog
+
+                dialog.innerHTML = `
+    <stripe-pricing-table
+        pricing-table-id="prctbl_1NYg90DE6ekUA9vc0dh2k5nZ"
+        publishable-key="pk_live_51LOj8hDE6ekUA9vc0NNVkwl2gAZGelNxTUMCvfWLhOosQyHCzOE2tzmeehhx1HeBy8rZVDjk3p01C0OnNvqeZLQG006BZGv59P"
+    >
+    </stripe-pricing-table>      
+    `;
+                document.body.appendChild(dialog);
+                dialog.showModal();
+            });
+            // close dialog if you click outside of it
+            dialog.addEventListener("click", (e) => {
+                if (e.target === dialog) {
+                    dialog.close();
+                }
             });
         </script>
     </body>

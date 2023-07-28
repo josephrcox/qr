@@ -2,6 +2,8 @@ if (process.env.NODE_ENV !== "production") {
     require("dotenv").config();
 }
 
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+
 const express = require("express");
 const app = express();
 const expressLayouts = require("express-ejs-layouts");
@@ -66,6 +68,7 @@ function isAuth(req, res, next) {
     try {
         let token = req.cookies.token;
         const verified = jwt.verify(token, process.env.JWT_SECRET);
+
         next();
     } catch (e) {
         console.log(req.cookies);
@@ -249,6 +252,8 @@ app.get("/api/get/codes", isAuth, async (req, res) => {
         }
     }
 
+    checkStripeStatus(currentUser.email);
+
     res.json({ status: "ok", code: 200, data: cleanCodes });
 });
 
@@ -259,6 +264,13 @@ app.post("/api/post/login", async (req, res) => {
     const hashedPassword = await bcrypt.hash(plainTextPassword, 10);
 
     if (!user) {
+        if (!newUserChecks(email, plainTextPassword)) {
+            return res.json({
+                status: "error",
+                code: 400,
+                error: "Invalid email and/or password",
+            });
+        }
         try {
             const response = await User.create({
                 password: hashedPassword,
@@ -276,6 +288,7 @@ app.post("/api/post/login", async (req, res) => {
             res.cookie("token", token, {
                 httpOnly: true,
             });
+            checkStripeStatus(email);
 
             return res.json({ status: "ok", code: 200, data: token });
         } catch (error) {
@@ -300,6 +313,8 @@ app.post("/api/post/login", async (req, res) => {
                 httpOnly: true,
             });
 
+            checkStripeStatus(user.email);
+
             return res.json({ status: "ok", code: 200, data: token });
         } else {
             res.status(500).json({
@@ -309,6 +324,70 @@ app.post("/api/post/login", async (req, res) => {
         }
     }
 });
+
+function checkStripeStatus(email) {
+    stripe.customers.list(
+        {
+            email: email,
+        },
+        async function (err, customers) {
+            if (err) {
+                console.log(err);
+            }
+            if (customers.data.length == 0) {
+                console.log("Creating customer");
+                stripe.customers.create({
+                    email: email,
+                });
+            } else {
+                const customer = await stripe.customers.retrieve(
+                    customers.data[0].id,
+                    {
+                        expand: ["subscriptions"],
+                    }
+                );
+
+                let active = false;
+                if (customer.subscriptions.data[0] != null) {
+                    const customerPlanDetails =
+                        customer.subscriptions.data[0].plan;
+                    active = customerPlanDetails.active;
+                }
+
+                const planNumber = active ? 1 : 0;
+                const user = await User.findOne({
+                    email: customer.email,
+                });
+                user.plan = planNumber;
+                await user.save();
+            }
+        }
+    );
+}
+
+function newUserChecks(email, password) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (
+        email == undefined ||
+        password == undefined ||
+        email.length < 3 ||
+        password.length < 3 ||
+        !email.includes("@") ||
+        !email.includes(".") ||
+        email.includes(" ") ||
+        password.includes(" ") ||
+        password.includes("password") ||
+        password.includes("123456") ||
+        password.includes("123456789") ||
+        password.includes("qwerty") ||
+        password.includes("abc123") ||
+        emailRegex.test(email) == false
+    ) {
+        return false;
+    }
+
+    return true;
+}
 
 //// Takes a code ID and returns the code data
 app.get("/explore/:id", isAuth, async (req, res) => {
@@ -326,6 +405,10 @@ app.get("/explore/:id", isAuth, async (req, res) => {
 
 app.get("/login", (req, res) => {
     res.render("login.ejs");
+});
+
+app.get("/upgrade", (req, res) => {
+    res.render("payment.ejs");
 });
 
 app.get("/", isAuth, (req, res) => {
