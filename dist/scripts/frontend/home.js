@@ -108,10 +108,9 @@ if (codesData.status === "ok") {
         const headerRow = document.createElement("tr");
         headerRow.id = "headerRow";
         headerRow.insertCell(0).outerHTML = "<th>Name</th>";
-        headerRow.insertCell(1).outerHTML = "<th>Redirect URL</th>";
-        headerRow.insertCell(2).outerHTML = "<th>Visits</th>";
-        headerRow.insertCell(3).outerHTML = "<th>Actions</th>";
-        headerRow.insertCell(4).outerHTML = "<th>QR Code</th>";
+        headerRow.insertCell(1).outerHTML = "<th>Visits</th>";
+        headerRow.insertCell(2).outerHTML = "<th>Actions</th>";
+        headerRow.insertCell(3).outerHTML = "<th>QR Code</th>";
         codesList.appendChild(headerRow);
 
         for (const code of codesData.data) {
@@ -122,20 +121,12 @@ if (codesData.status === "ok") {
             // Create table data elements
             const nameTd = document.createElement("td");
             nameTd.classList.add("name");
-            nameTd.innerText = code.name;
-
-            const redirectUrlTd = document.createElement("td");
-            redirectUrlTd.classList.add("redirectUrl");
-            const redirectUrl = document.createElement("a");
-            redirectUrl.innerText =
-                new URL(code.redirect_url).hostname + "/...";
-            redirectUrl.href = code.redirect_url;
-            redirectUrlTd.appendChild(redirectUrl);
+            nameTd.innerHTML = `<a href="${code.redirect_url}"> ${code.name}</a>`;
 
             const currentBaseURL = window.location.href.split("/")[2];
             const visitsTd = document.createElement("td");
             visitsTd.classList.add("visits");
-            visitsTd.innerHTML = `Visits: <a href='/explore/${code.short_id}'>${code.visits}</a>`;
+            visitsTd.innerHTML = `<a href='/explore/${code.short_id}'>${code.visits}</a>`;
 
             const buttonsTd = document.createElement("td");
             buttonsTd.classList.add("codeButtons");
@@ -176,25 +167,46 @@ if (codesData.status === "ok") {
                     url = url = `${currentBaseURL}/link/${code.short_id}`;
                 }
                 navigator.clipboard.writeText(url);
-                const dialog = document.createElement("dialog");
-                dialog.id = "dialog";
-                dialog.classList.add("dialog");
-                const dialogContent = document.createElement("div");
-                dialogContent.classList.add("dialogContent");
-                const dialogHTML = document.createElement("div");
-                dialogHTML.innerHTML = `
-                        <p> Copied to clipboard </p>
-                        <button onclick="this.parentElement.parentElement.parentElement.close()">Close</button>
-                    `;
-                dialogContent.appendChild(dialogHTML);
-                dialog.appendChild(dialogContent);
-                document.body.appendChild(dialog);
-                dialog.showModal();
+                testLinkButton.innerText = "Copied!";
+                setTimeout(() => {
+                    testLinkButton.innerText = "Copy Link";
+                }, 2000);
             });
             buttonsTd.appendChild(testLinkButton);
 
+            const updateLinkButton = document.createElement("button");
+            updateLinkButton.classList.add(
+                "btn",
+                "btn-primary",
+                "updateButton"
+            );
+            updateLinkButton.innerText = "Update link";
+            updateLinkButton.dataset.id = code._id;
+            updateLinkButton.addEventListener("click", async (event) => {
+                event.preventDefault();
+                const newURL = prompt("Enter a new URL:");
+                if (newURL === null) {
+                    return;
+                }
+                const response = await fetch("/api/post/updatecode/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        id: updateLinkButton.dataset.id,
+                        newURL: newURL,
+                    }),
+                });
+                const data = await response.json();
+                if (data.status === "ok") {
+                    window.location.reload();
+                }
+            });
+            buttonsTd.appendChild(updateLinkButton);
+
             // Append created table data elements to the row
-            tableRow.append(nameTd, redirectUrlTd, visitsTd, buttonsTd);
+            tableRow.append(nameTd, visitsTd, buttonsTd);
             const qrCodeTd = document.createElement("td");
             qrCodeTd.classList.add("qrCode");
             if (code.type === "qr") {
@@ -217,6 +229,8 @@ if (codesData.status === "ok") {
                     window.URL.revokeObjectURL(url);
                 });
                 qrCodeTd.appendChild(img);
+            } else {
+                qrCodeTd.innerHTML = "<span style='color: gray;'>N/A</span>";
             }
             tableRow.appendChild(qrCodeTd);
 

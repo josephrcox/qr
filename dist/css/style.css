@@ -5,6 +5,7 @@
 
 :root {
     --primaryGreen: #06d6a0;
+    --lightGreen: #b4f1c1;
     --yellow: #ffd166;
     --pink: #ef476f;
     --blue: #118ab2;
@@ -20,7 +21,7 @@
 body {
     margin: 0;
     padding: 0;
-    background-color: var(--primaryGreen);
+    background-color: var(--lightGreen);
     display: flex;
     color: white;
     justify-content: center;
@@ -159,9 +160,10 @@ td {
 }
 
 .codeButtons {
-    /*! display: flex; */
+    display: flex;
     flex-direction: row;
-    gap: 10px;
+    align-items: center;
+    height: inherit;
 }
 .subButtons {
     display: flex;
@@ -178,6 +180,7 @@ td {
 
 .qrCode {
     width: fit-content;
+    text-align: center;
 }
 
 /* Login form styles */
@@ -260,17 +263,6 @@ label {
 
 /* Media queries for responsive design */
 @media (max-width: 500px) {
-    .creationParent {
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
-        gap: 20px;
-        overflow-x: scroll;
-        justify-items: center;
-        width: 100%;
-        align-content: center;
-        align-items: center;
-    }
     /* creationParent children */
     .creation,
     .createalink {
@@ -286,12 +278,15 @@ label {
     div.createalink {
         width: 80%;
         max-width: 340px;
+        min-width: unset;
+        margin-top: 28px;
     }
 
     div.codes {
-        max-width: 81%;
+        max-width: 95vw;
         min-width: 40%;
         margin-inline: 10px;
+        overflow-x: scroll;
     }
 
     input[type="text"],
@@ -301,6 +296,7 @@ label {
 
     #codesList {
         overflow-x: scroll;
+        max-width: 90vw;
     }
 
     button {
@@ -309,6 +305,17 @@ label {
 
     img {
         max-width: 80px;
+    }
+    .header {
+        display: flex;
+        flex-direction: column;
+        position: initial;
+        margin-top: 0px;
+        max-height: fit-content;
+        padding-top: 15px;
+    }
+    body {
+        margin-top: 0px;
     }
 }
 
@@ -379,6 +386,7 @@ label {
     margin-bottom: 50px;
     width: 70%;
     min-width: 150px;
+    border-radius: 5px;
 }
 
 .creation h3 {
@@ -408,29 +416,48 @@ label {
     margin-top: 20px;
 }
 
+.codes {
+    max-width: 90vw;
+    overflow: scroll;
+    border-radius: 5px;
+}
+
+.creationButtons {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
 #creationSubmit,
 #creationSubmitLink {
     padding: 10px 20px;
     border: none;
     /* primaryGreen */
-    background-color: var(--pink);
+    background-color: var(--blue);
     color: white;
     cursor: pointer;
     border-radius: 4px; /* Matching rounded borders */
     font-size: 16px;
+    /* transition over 0.3 when hover */
+    transition: background-color 0.3s ease;
 }
 
 #creationSubmitLink {
     background-color: var(--blue);
 }
 
+#creationSubmitLink:hover,
 #creationSubmit:hover {
-    /* darker than --pink */
-    background-color: #d23c5a;
+    background-color: #055fa4;
 }
 
-#creationSubmitLink:hover {
-    background-color: #055fa4;
+#footerText {
+    color: white;
+}
+#footerText a {
+    color: white;
+    font-weight: 500;
 }
 
 span.hidden {
@@ -503,12 +530,13 @@ textarea.has-content {
 }
 
 .btn-danger {
-    background-color: #dc3545;
+    background-color: var(--pink);
     color: #fff;
 }
 
 a {
     text-decoration: none;
+    color: #0e0edd;
 }
 table {
     width: 100%;
@@ -538,8 +566,22 @@ tr:nth-child(even) {
     height: 23px;
 }
 
-.testButton {
+.testButton,
+.updateButton {
     background-color: #e0e0e0;
+}
+
+.footer {
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    background-color: var(--darkblue);
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-align: center;
+    margin-top: 50px;
+    position: fixed;
+    color: white;
 }
 
 .codeButtons .btn {

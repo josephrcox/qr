@@ -7,7 +7,13 @@ code.visitor_metadata[index].ip.replace(/^::ffff:/, ""); %> <%
 if(!groupedVisits[currentIp]) { %> <% groupedVisits[currentIp] = {count: 0,
 visits: []}; %> <% } %> <% groupedVisits[currentIp].count++; %> <%
 groupedVisits[currentIp].visits.push(code.visitor_metadata[index]); %> <% } %>
-
+<% if (code.visitor_metadata.length == 0) { %>
+<div class="visitLines">
+    <div class="visitLine">
+        <span class="ip">No visits yet</span>
+    </div>
+</div>
+<% } else { %>
 <div class="visitLines">
     <!-- Display grouped visit data -->
     <% for(let ip in groupedVisits) { %>
@@ -27,14 +33,15 @@ groupedVisits[currentIp].visits.push(code.visitor_metadata[index]); %> <% } %>
                 <span class="location">
                     (<%= visit.user_city %>, <%= visit.user_country %>)</span
                 >
+                <% } %> <% if (visit.link != null) { %>
+                <span class="visitLink"> - <%= visit.link %></span>
                 <% } %>
             </li>
             <% } %>
         </ol>
     </div>
 </div>
-
-<% } %>
+<% } %> <% } %>
 
 <script>
     const visitLines = document.querySelectorAll(".visitLine");

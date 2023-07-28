@@ -124,6 +124,7 @@ app.get("/code", async (req, res) => {
         user_country: user_country,
         user_city: user_city,
         user_region: user_region,
+        link: dbResponse.redirect_url,
     });
     await dbResponse.save();
     res.redirect(dbResponse.redirect_url);
@@ -167,6 +168,7 @@ app.get("/link/:shortid", async (req, res) => {
         user_country: user_country,
         user_city: user_city,
         user_region: user_region,
+        link: dbResponse.redirect_url,
     });
     await dbResponse.save();
     res.redirect(dbResponse.redirect_url);
@@ -216,6 +218,20 @@ app.post("/api/post/deletecode/", isAuth, async (req, res) => {
     }
     await Code.deleteOne({ _id: id });
     await res.json({ status: "ok", code: 200, data: "Deleted!" });
+});
+
+//// takes a code ID, a new URL, and updates the code
+app.post("/api/post/updatecode/", isAuth, async (req, res) => {
+    const { id, newURL } = req.body;
+    const currentUser = await getUserData(req);
+    const dbResponse = await Code.findOne({ _id: id });
+    console.log(dbResponse);
+    if (dbResponse.owner != currentUser) {
+        res.json({ status: "error", code: 403, data: "Not your code!" });
+        return;
+    }
+    await Code.findOneAndUpdate({ _id: id }, { redirect_url: newURL });
+    await res.json({ status: "ok", code: 200, data: "Updated!" });
 });
 
 //// Returns all of the codes created by the current user
