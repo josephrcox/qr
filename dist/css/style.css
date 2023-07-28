@@ -34,6 +34,7 @@
     font-variant: all-small-caps;
     cursor: pointer;
     transition: all 0.3s;
+    font-size: 22px;
 }
 
 dialog {
@@ -47,14 +48,13 @@ dialog {
 body {
     margin: 0;
     padding: 0;
-    background-color: var(--lightGreen);
+    background-color: var(--blue);
     display: flex;
     color: white;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     /* hide horizontal scrollbars */
-    margin-top: 35px;
 }
 
 .title {
@@ -80,6 +80,11 @@ tr th {
     font-weight: 300;
     color: #333;
     font-size: 0.7em;
+    text-align: center;
+}
+
+stripe-pricing-table {
+    width: 95%;
 }
 
 .center {
@@ -170,13 +175,15 @@ td {
     max-height: 30px;
     /* box shadow */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    position: fixed;
-    top: 0;
+    margin-bottom: 10px;
+    padding-left: 0px;
+    padding-right: 0px;
 }
 
 #logo {
     /* You can adjust this size based on your preference */
     max-width: 240px;
+    cursor: pointer;
 }
 
 #subtitle {
@@ -410,7 +417,7 @@ label {
     padding: 20px;
     background: #ffffff;
     box-shadow: 0px 18px 9px rgba(0, 0, 0, 0.1); /* Optional: add a shadow for a little "pop" */
-    margin-top: 50px;
+    margin-top: 25px;
     margin-bottom: 50px;
     width: 70%;
     min-width: 150px;
@@ -591,7 +598,8 @@ tr:nth-child(even) {
 }
 
 #headerRow {
-    height: 23px;
+    height: 29px;
+    text-align: center;
 }
 
 .testButton,
@@ -602,7 +610,7 @@ tr:nth-child(even) {
 .footer {
     bottom: 0px;
     left: 0px;
-    width: 100%;
+    width: 100vw;
     background-color: var(--darkblue);
     padding-top: 5px;
     padding-bottom: 5px;
@@ -610,6 +618,7 @@ tr:nth-child(even) {
     margin-top: 50px;
     position: fixed;
     color: white;
+    overflow: clip;
 }
 
 #codesList p {
@@ -648,6 +657,13 @@ tr:nth-child(even) {
 /* CSS for QR code */
 .qrCode img {
     height: 49px;
+}
+
+#upgradeTitle {
+    color: white;
+    background-color: var(--blue);
+    padding: 7px;
+    border-radius: 4px;
 }
 
 /* center items vertically in all tds in trs */

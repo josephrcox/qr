@@ -407,7 +407,7 @@ app.get("/login", (req, res) => {
     res.render("login.ejs");
 });
 
-app.get("/upgrade", (req, res) => {
+app.get("/payment", (req, res) => {
     res.render("payment.ejs");
 });
 

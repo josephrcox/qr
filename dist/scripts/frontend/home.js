@@ -1,5 +1,8 @@
 // This is an authed page.
 
+const upgradeButton = document.getElementById("upgrade");
+upgradeButton.style.display = "";
+
 const creationName = document.getElementById("creationName");
 const creationUrl = document.getElementById("creationUrl");
 const creationSubmit = document.getElementById("creationSubmit");
