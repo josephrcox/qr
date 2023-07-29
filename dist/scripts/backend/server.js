@@ -359,6 +359,8 @@ app.get("/api/get/user", isAuth, async (req, res) => {
         });
     }
 
+    checkStripeStatus(userEmail);
+
     const [dynamicCodeCount, dynamicCodeMax] = await dynamicCodeCounter(
         userEmail,
         user.plan
