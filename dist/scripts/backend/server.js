@@ -364,13 +364,25 @@ app.get("/api/get/user", isAuth, async (req, res) => {
         user.plan
     );
 
+    // read the creation timestamp and convert to Month, Day, Year
+    let signupDate = user.createdAt.toString();
+    // convert Fri Jul 28 2023 22:17:31 GMT-0400 (Eastern Daylight Time) to just "Jul 28 2023"
+    signupDate = signupDate.substring(4, 15);
+
     const cleanUser = {
         email: user.email,
         plan: user.plan,
+        prettyPlan: ["Free", "Premium", "Business", "Pro"][user.plan],
+        signup: signupDate,
         dynamicCodeCount: dynamicCodeCount,
         dynamicCodeMax: dynamicCodeMax,
     };
     res.json({ status: "ok", code: 200, data: cleanUser });
+});
+
+app.get("/api/logout", isAuth, async (req, res) => {
+    res.clearCookie("token");
+    return res.json({ status: "ok", code: 200, data: "Logged out!" });
 });
 
 async function dynamicCodeCounter(email, plan) {
@@ -496,6 +508,10 @@ app.get("/explore/:id", isAuth, async (req, res) => {
 
 app.get("/login", (req, res) => {
     res.render("login.ejs");
+});
+
+app.get("/you", isAuth, (req, res) => {
+    res.render("you.ejs");
 });
 
 app.get("/payment", (req, res) => {

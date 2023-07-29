@@ -1,0 +1,36 @@
+<!-- basic page with your account email, sign up date, and current plan. This data is filled out with JS -->
+
+<link rel="stylesheet" href="/dist/css/you.css" />
+
+<div class="youContainer" id="youContainer" style="display: none">
+    <h2>Your account info</h2>
+
+    <div class="youRow">
+        <span>Email</span>
+        <span id="youEmail">j@j.com</span>
+    </div>
+    <div class="youRow">
+        <span>Sign-up date</span>
+        <span id="youSignupDate">June 10</span>
+    </div>
+    <div class="youRow">
+        <span>Your plan </span>
+        <span>
+            <div class="column">
+                <span id="youPlan">Free plan</span>
+                <button id="youManage">Manage plan</button>
+            </div>
+            <button id="youUpgrade">Upgrade :)</button>
+        </span>
+    </div>
+    <div class="youRow">
+        <span>Dynamic code count</span>
+        <span id="youDynamicCodeCount"></span>
+    </div>
+
+    <div>
+        <button id="youLogout">Logout</button>
+    </div>
+</div>
+
+<script src="/dist/scripts/frontend/you.js" type="module"></script>

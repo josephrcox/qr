@@ -20,12 +20,12 @@
     <header class="header">
         <div>
             <img src="/dist/logo.svg" alt="quality codes logo" id="logo" />
+            <span id="subtitle">Fast & Simple QR code + Link Tracking </span>
         </div>
+
         <div>
             <button id="upgrade" style="display: none">Upgrade</button>
-        </div>
-        <div>
-            <span id="subtitle">Fast & Simple QR code + Link Tracking </span>
+            <a href="/you" class="headerLink">Manage account</a>
         </div>
     </header>
     <body>
@@ -43,20 +43,6 @@
             const dialog = document.createElement("dialog");
             upgrade.addEventListener("click", async () => {
                 window.location.href = "/payment";
-
-                //                 dialog.innerHTML = `
-                // <stripe-pricing-table pricing-table-id="prctbl_1NYg90DE6ekUA9vc0dh2k5nZ"
-                // publishable-key="pk_live_51LOj8hDE6ekUA9vc0NNVkwl2gAZGelNxTUMCvfWLhOosQyHCzOE2tzmeehhx1HeBy8rZVDjk3p01C0OnNvqeZLQG006BZGv59P">
-                // </stripe-pricing-table>
-                //     `;
-                //                 document.body.appendChild(dialog);
-                //                 dialog.showModal();
-            });
-            // close dialog if you click outside of it
-            dialog.addEventListener("click", (e) => {
-                if (e.target === dialog) {
-                    dialog.close();
-                }
             });
         </script>
     </body>

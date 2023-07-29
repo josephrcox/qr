@@ -17,14 +17,18 @@
     font-family: "localLora", fallback, sans-serif;
 }
 
-#upgrade:hover {
+#upgrade:hover,
+#youUpgrade:hover,
+#youManage {
     /* grow */
     transform: scale(1.5);
     animation: wiggle 0.3s ease-in-out 2;
     transform: scale(1);
 }
 
-#upgrade {
+#upgrade,
+#youUpgrade,
+#youManage {
     all: unset;
     color: #16c149;
     padding: 5px;
@@ -173,7 +177,7 @@ td {
     padding: 20px 40px;
     width: 100%;
     background-color: #f4f4f4; /* You can change this to your preferred color */
-    max-height: 30px;
+    max-height: 50px;
     /* box shadow */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     margin-bottom: 10px;
@@ -188,9 +192,10 @@ td {
 }
 
 #subtitle {
-    font-size: 15px;
+    font-size: 12px;
     font-weight: lighter;
     color: #0000007a; /* You can change this to your preferred color */
+    padding-left: 5px;
 }
 
 .codeButtons {
@@ -295,6 +300,11 @@ label {
     .card {
         max-width: 150px;
     }
+    .header div:nth-child(2) {
+        margin-inline: 0px;
+        margin-left: auto;
+        margin-right: 18px;
+    }
 }
 
 /* Media queries for responsive design */
@@ -312,14 +322,14 @@ label {
     div.creation,
     div.codes,
     div.createalink {
-        width: 80%;
+        width: 83%;
         max-width: 340px;
         min-width: unset;
         margin-top: 28px;
     }
 
     div.codes {
-        max-width: 95vw;
+        max-width: 96vw;
         min-width: 40%;
         margin-inline: 10px;
         overflow-x: scroll;
@@ -349,9 +359,18 @@ label {
         margin-top: 0px;
         max-height: fit-content;
         padding-top: 15px;
+        justify-content: end;
+        gap: 11px;
     }
     body {
         margin-top: 0px;
+    }
+    .header div:nth-child(2) {
+        flex-direction: row;
+        margin-left: unset;
+        overflow-x: scroll;
+        flex-wrap: nowrap;
+        max-width: 100%;
     }
 }
 
@@ -561,10 +580,17 @@ textarea.has-content {
 
 .header div {
     display: flex;
-    text-align: center;
-    align-items: center;
+    align-items: baseline;
     margin-inline: 18px;
+    flex-direction: column;
+    gap: 10px;
 }
+
+.headerLink {
+    color: var(--blue);
+}
+
+/* 2nd div in header */
 
 .btn-danger {
     background-color: var(--pink);
