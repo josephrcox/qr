@@ -69,9 +69,11 @@ function isAuth(req, res, next) {
         let token = req.cookies.token;
         const verified = jwt.verify(token, process.env.JWT_SECRET);
 
-        next();
+        if (verified) {
+            return next();
+        }
     } catch (e) {
-        console.log(req.cookies);
+        res.clearCookie("token");
         return res.redirect("/login");
     }
 }
@@ -179,9 +181,9 @@ app.get("/link/:shortid", async (req, res) => {
 
 //// Takes some new code data, creates a new code, and returns the base64
 app.post("/api/post/createcode/", isAuth, async (req, res) => {
-    const { redirect_url, name, type } = req.body;
+    let { redirect_url, name, type, isDynamic } = req.body;
 
-    const currentUser = await getUserData(req);
+    const userEmail = await getUserData(req);
     // generate a short id that has not been used already in other codes
     let continueTrying = true;
     let short_id = "";
@@ -198,16 +200,36 @@ app.post("/api/post/createcode/", isAuth, async (req, res) => {
             continueTrying = false;
         }
     }
+    let maxCodeMsg = "";
+    if (isDynamic) {
+        const user = await User.findOne({ email: userEmail });
+        if (user.plan == 0) {
+            isDynamic = false;
+        } else {
+            const [count, max] = await dynamicCodeCounter(userEmail, user.plan);
+            if (count >= max) {
+                isDynamic = false;
+                maxCodeMsg =
+                    "You have reached your dynamic code limit! Either delete some codes or upgrade your plan.";
+            }
+        }
+    }
 
     const dbResponse = await Code.create({
         redirect_url: redirect_url,
         name: name,
         short_id: short_id,
-        owner: currentUser,
+        owner: userEmail,
         type: type.toLowerCase(),
+        isDynamic: isDynamic,
     });
 
-    res.json({ status: "ok", code: 200, data: dbResponse.code });
+    res.json({
+        status: "ok",
+        code: 200,
+        data: dbResponse.code,
+        message: maxCodeMsg,
+    });
 });
 
 //// Takes a code ID and deletes the code if they are the creator
@@ -325,6 +347,59 @@ app.post("/api/post/login", async (req, res) => {
     }
 });
 
+//// takes a cookie and returns the user information after it has been scrubbed
+app.get("/api/get/user", isAuth, async (req, res) => {
+    const userEmail = await getUserData(req);
+    const user = await User.findOne({ email: userEmail });
+    if (user == null) {
+        return res.json({
+            status: "error",
+            code: 400,
+            error: "Invalid user",
+        });
+    }
+
+    const [dynamicCodeCount, dynamicCodeMax] = await dynamicCodeCounter(
+        userEmail,
+        user.plan
+    );
+
+    const cleanUser = {
+        email: user.email,
+        plan: user.plan,
+        dynamicCodeCount: dynamicCodeCount,
+        dynamicCodeMax: dynamicCodeMax,
+    };
+    res.json({ status: "ok", code: 200, data: cleanUser });
+});
+
+async function dynamicCodeCounter(email, plan) {
+    const dynamicCodes = await Code.find({
+        owner: email,
+        isDynamic: true,
+    });
+
+    const dynamicCodeCount = dynamicCodes.length;
+    let dynamicCodeMax = 0;
+    switch (plan) {
+        case 0:
+            dynamicCodeMax = 0;
+            break;
+        case 1:
+            dynamicCodeMax = 50;
+            break;
+        case 2:
+            dynamicCodeMax = 250;
+            break;
+        case 3:
+            dynamicCodeMax = 1000000;
+            break;
+        default:
+            dynamicCodeMax = 0;
+    }
+    return [dynamicCodeCount, dynamicCodeMax];
+}
+
 function checkStripeStatus(email) {
     stripe.customers.list(
         {
@@ -364,6 +439,22 @@ function checkStripeStatus(email) {
         }
     );
 }
+
+app.get("/admin/:plan", async (req, res) => {
+    const { plan } = req.params;
+    const userEmail = await getUserData(req);
+    const user = await User.findOne({ email: userEmail });
+    if (user == null || user.email != "josephrobertcox@gmail.com") {
+        return res.json({
+            status: "error",
+            code: 400,
+            error: "Invalid user",
+        });
+    }
+    user.plan = plan;
+    await user.save();
+    return res.redirect("/");
+});
 
 function newUserChecks(email, password) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

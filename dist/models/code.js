@@ -4,6 +4,7 @@ const codeSchema = new mongoose.Schema(
     {
         type: { type: String, required: true },
         redirect_url: { type: String, required: true },
+        isDynamic: { type: Boolean, required: true },
         short_id: { type: String, required: true },
         name: { type: String, required: true },
         owner: { type: String, required: true },

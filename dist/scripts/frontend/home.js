@@ -1,16 +1,24 @@
 // This is an authed page.
 
+import {
+    USER_DATA,
+    loadUserEntitlements,
+    accessToPremiumAnalytics,
+    canCreateDynamicCodes,
+} from "./entitlement.js";
+import { toast } from "./toast.js";
+
+document.onload = await loadUserEntitlements();
+
 const upgradeButton = document.getElementById("upgrade");
 upgradeButton.style.display = "";
 
 const creationName = document.getElementById("creationName");
 const creationUrl = document.getElementById("creationUrl");
 const creationSubmit = document.getElementById("creationSubmit");
-const message = document.querySelector("#message");
-
-const creationNameLink = document.getElementById("creationNameLink");
-const creationUrlLink = document.getElementById("creationUrlLink");
 const creationSubmitLink = document.getElementById("creationSubmitLink");
+const message = document.querySelector("#message");
+const dynamicToggle = document.getElementById("dynamicToggle");
 
 creationUrl.addEventListener("input", function () {
     if (this.value.trim() !== "") {
@@ -82,11 +90,15 @@ async function createCode(type, name, redirect_url) {
             redirect_url: redirect_url,
             name: name,
             type: type,
+            isDynamic: dynamicToggle.checked,
         }),
     });
     const data = await response.json();
     if (data.status === "ok") {
         loadCodes();
+    }
+    if (data.message) {
+        toast(data.message, true);
     }
 }
 
@@ -184,36 +196,44 @@ async function loadCodes() {
                 });
                 buttonsTd.appendChild(testLinkButton);
 
-                const updateLinkButton = document.createElement("button");
-                updateLinkButton.classList.add(
-                    "btn",
-                    "btn-primary",
-                    "updateButton"
-                );
-                updateLinkButton.innerText = "Update link";
-                updateLinkButton.dataset.id = code._id;
-                updateLinkButton.addEventListener("click", async (event) => {
-                    event.preventDefault();
-                    const newURL = prompt("Enter a new URL:");
-                    if (newURL === null) {
-                        return;
-                    }
-                    const response = await fetch("/api/post/updatecode/", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({
-                            id: updateLinkButton.dataset.id,
-                            newURL: newURL,
-                        }),
-                    });
-                    const data = await response.json();
-                    if (data.status === "ok") {
-                        window.location.reload();
-                    }
-                });
-                buttonsTd.appendChild(updateLinkButton);
+                if (USER_DATA.plan > 0 && code.isDynamic) {
+                    const updateLinkButton = document.createElement("button");
+                    updateLinkButton.classList.add(
+                        "btn",
+                        "btn-primary",
+                        "updateButton"
+                    );
+                    updateLinkButton.innerText = "Update link";
+                    updateLinkButton.dataset.id = code._id;
+                    updateLinkButton.addEventListener(
+                        "click",
+                        async (event) => {
+                            event.preventDefault();
+                            const newURL = prompt("Enter a new URL:");
+                            if (newURL === null) {
+                                return;
+                            }
+                            const response = await fetch(
+                                "/api/post/updatecode/",
+                                {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                    },
+                                    body: JSON.stringify({
+                                        id: updateLinkButton.dataset.id,
+                                        newURL: newURL,
+                                    }),
+                                }
+                            );
+                            const data = await response.json();
+                            if (data.status === "ok") {
+                                window.location.reload();
+                            }
+                        }
+                    );
+                    buttonsTd.appendChild(updateLinkButton);
+                }
 
                 // Append created table data elements to the row
                 tableRow.append(nameTd, visitsTd, buttonsTd);
@@ -252,3 +272,17 @@ async function loadCodes() {
 }
 
 loadCodes();
+
+dynamicToggle.addEventListener("click", async (event) => {
+    const value = dynamicToggle.checked;
+    if (value) {
+        if (!canCreateDynamicCodes()) {
+            toast(
+                "You have reached your dynamic code limit. Upgrade to create more.",
+                true
+            );
+            dynamicToggle.checked = false;
+            return;
+        }
+    }
+});
