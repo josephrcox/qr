@@ -117,8 +117,6 @@ async function loadCodes() {
     if (codesData.status == "ok") {
         codesList.innerHTML = "";
         generateCodes(codesData.data);
-        generateCodes(codesData.data);
-        generateCodes(codesData.data);
     }
 }
 
