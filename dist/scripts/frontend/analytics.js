@@ -1,4 +1,4 @@
-import { USER_DATA } from "./entitlement";
+import { USER_DATA } from "./entitlement.js";
 
 export const events = {
     login: "login",
