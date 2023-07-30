@@ -11,6 +11,7 @@
     --blue: #118ab2;
     --darkblue: #073b4c;
     --lightblue: #aae2f4;
+    --backgroundAlt: #f5faff;
 }
 
 * {
@@ -32,7 +33,7 @@
     all: unset;
     color: #16c149;
     padding: 5px;
-    background-color: white;
+    background-color: var(--backgroundAlt);
     border-radius: 5px;
     font-weight: 500;
     font-variant: all-small-caps;
@@ -54,7 +55,7 @@ body {
     padding: 0;
     background-color: var(--blue);
     display: flex;
-    color: white;
+    color: var(--backgroundAlt);
     justify-content: center;
     align-items: center;
     flex-direction: column;
@@ -174,49 +175,35 @@ td {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 40px;
     width: 100%;
-    background-color: #f4f4f4; /* You can change this to your preferred color */
-    max-height: 50px;
+    background-color: var(
+        --backgroundAlt
+    ); /* You can change this to your preferred color */
+
     /* box shadow */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     margin-bottom: 10px;
     padding-left: 0px;
     padding-right: 0px;
+    padding-bottom: 5px;
 }
 
 #logo {
     /* You can adjust this size based on your preference */
-    max-width: 240px;
+    max-width: 140px;
     cursor: pointer;
-}
-
-#subtitle {
-    font-size: 12px;
-    font-weight: lighter;
-    color: #0000007a; /* You can change this to your preferred color */
-    padding-left: 5px;
 }
 
 .codeButtons {
     display: flex;
     flex-direction: row;
     align-items: center;
-    height: inherit;
+    justify-content: center;
 }
 .subButtons {
     display: flex;
     flex-direction: column;
     gap: 10px;
-}
-
-#codesList {
-    width: 100%;
-    color: black;
-    /* box shadow */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    padding-bottom: 10px;
-    overflow-y: hidden;
 }
 
 .qrCode {
@@ -275,7 +262,7 @@ label {
 }
 
 .messageDiv {
-    background-color: white;
+    background-color: var(--backgroundAlt);
     margin: 10px;
 }
 
@@ -292,11 +279,6 @@ label {
 }
 
 @media (min-width: 501px) {
-    #codesList {
-        overflow-x: hidden;
-        -ms-overflow-style: none; /* IE and Edge */
-        scrollbar-width: none; /* Firefox */
-    }
     .card {
         max-width: 150px;
     }
@@ -340,17 +322,15 @@ label {
         font-size: 14px;
     }
 
-    #codesList {
-        overflow-x: scroll;
-        max-width: 90vw;
-    }
-
     button {
         padding: 10px;
     }
 
     img {
         max-width: 80px;
+    }
+    #logo {
+        max-width: 125px;
     }
     .header {
         display: flex;
@@ -371,6 +351,7 @@ label {
         overflow-x: scroll;
         flex-wrap: nowrap;
         max-width: 100%;
+        padding-bottom: 15px;
     }
 }
 
@@ -435,14 +416,23 @@ label {
 .creation {
     max-width: 500px; /* Or adjust to your liking */
     padding: 20px;
-    background: #ffffff;
-    box-shadow: 0px 18px 9px rgba(0, 0, 0, 0.1); /* Optional: add a shadow for a little "pop" */
+    background: var(--backgroundAlt);
     margin-top: 25px;
     margin-bottom: 50px;
     width: 70%;
     min-width: 150px;
-    border-radius: 5px;
+
     padding-bottom: 5px;
+}
+
+.roundedBox {
+    border-radius: 5px;
+    box-shadow: 0px 3px 10px 2px rgba(0, 0, 0, 0.1); /* Optional: add a shadow for a little "pop" */
+}
+
+textarea,
+input {
+    background-color: var(--backgroundAlt);
 }
 
 .creation h3 {
@@ -454,6 +444,10 @@ label {
     font-size: 12px;
     color: #888;
     margin-bottom: 20px;
+}
+
+::-webkit-scrollbar {
+    display: none;
 }
 
 .creation label {
@@ -473,9 +467,11 @@ label {
 }
 
 .codes {
-    max-width: 90vw;
-    overflow: scroll;
     border-radius: 5px;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
 }
 
 .creationButtons {
@@ -491,7 +487,7 @@ label {
     border: none;
     /* primaryGreen */
     background-color: var(--blue);
-    color: white;
+    color: var(--backgroundAlt);
     cursor: pointer;
     border-radius: 4px; /* Matching rounded borders */
     font-size: 16px;
@@ -509,10 +505,10 @@ label {
 }
 
 #footerText {
-    color: white;
+    color: var(--backgroundAlt);
 }
 #footerText a {
-    color: white;
+    color: var(--backgroundAlt);
     font-weight: 500;
 }
 
@@ -582,12 +578,12 @@ textarea.has-content {
     display: flex;
     align-items: baseline;
     margin-inline: 18px;
-    flex-direction: column;
+    flex-direction: row;
     gap: 10px;
 }
 
 .headerLink {
-    color: var(--blue);
+    color: var(--darkblue);
 }
 
 /* 2nd div in header */
@@ -599,8 +595,14 @@ textarea.has-content {
 
 a {
     text-decoration: none;
-    color: #0e0edd;
+    color: rgb(69, 69, 69);
 }
+
+a:hover {
+    color: var(--blue);
+    cursor: pointer;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -617,7 +619,7 @@ td {
 }
 
 tr {
-    background-color: white;
+    background-color: var(--backgroundAlt);
 }
 
 tr:nth-child(even) {
@@ -645,21 +647,10 @@ tr:nth-child(even) {
     text-align: center;
     margin-top: 50px;
     position: fixed;
-    color: white;
+    color: var(--backgroundAlt);
     overflow: clip;
 }
 
-#codesList p {
-    color: white;
-    background-color: var(--pink);
-    padding: 10px;
-    border-radius: 11px;
-    margin: 10px;
-    /* use wiggle */
-    animation: wiggle 2s ease-in-out infinite;
-}
-
-/* make #codesList p wiggle ever few seconds (animated) */
 @keyframes wiggle {
     0% {
         transform: rotate(0deg);
@@ -688,7 +679,7 @@ tr:nth-child(even) {
 }
 
 #upgradeTitle {
-    color: white;
+    color: var(--backgroundAlt);
     background-color: var(--blue);
     padding: 7px;
     border-radius: 4px;
@@ -735,7 +726,7 @@ tr {
     width: 18px;
     left: 4px;
     bottom: 4px;
-    background-color: white;
+    background-color: var(--backgroundAlt);
     -webkit-transition: 0.4s;
     transition: 0.4s;
 }
@@ -775,4 +766,35 @@ span {
     border-top: 1px solid #eee;
     margin-bottom: 6px;
     padding-top: 6px;
+}
+
+#codesList {
+    column-gap: 10px;
+    column-width: 180px;
+    /* width + gap for each column, times the number of columns */
+    margin-inline: 10px;
+}
+
+.code {
+    margin: 5px; /* this will ensure a gap around each block */
+    display: inline-block;
+    background-color: var(--backgroundAlt);
+    text-align: center;
+    color: var(--darkblue);
+    padding: 10px;
+    max-height: 324px;
+    box-sizing: border-box; /* this makes padding part of the width, avoids overflow */
+    width: calc(
+        100% - 23px
+    ); /* subtract double the margin to keep the width within the column */
+    min-width: 180px;
+    max-width: 200px;
+}
+
+.codeName {
+    font-size: 1.2em;
+    font-weight: 500;
+    margin-bottom: 5px;
+    color: var(--darkblue);
+    margin: 0;
 }
