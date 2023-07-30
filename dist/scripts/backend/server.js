@@ -32,6 +32,10 @@ const mongoose = require("mongoose");
 mongoose.connect(process.env.DATEBASE_URL, {});
 const connection = mongoose.connection;
 
+express.static(path.resolve(__dirname, "frontend", "static"), {
+    extensions: ["js"],
+});
+
 connection.once("open", function (res) {
     console.log("Connected to Mongoose!");
     connectedToDB = true;
