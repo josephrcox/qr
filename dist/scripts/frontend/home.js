@@ -169,10 +169,10 @@ async function generateCodes(codes) {
             const data = await response.json();
             if (data.status === "ok") {
                 document.getElementById(code._id).remove();
+                trackEvent(events.deleteCode, {
+                    [eventProperties.type]: code.type,
+                });
             }
-            trackEvent(events.deleteCode, {
-                [eventProperties.type]: code.type,
-            });
         });
         buttons.appendChild(deleteButton);
 

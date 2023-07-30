@@ -312,7 +312,12 @@ app.post("/api/post/login", async (req, res) => {
             });
             checkStripeStatus(email);
 
-            return res.json({ status: "ok", code: 200, data: token });
+            return res.json({
+                status: "ok",
+                code: 200,
+                data: token,
+                newAccount: true,
+            });
         } catch (error) {
             return res.json({
                 status: "error",
@@ -337,7 +342,12 @@ app.post("/api/post/login", async (req, res) => {
 
             checkStripeStatus(user.email);
 
-            return res.json({ status: "ok", code: 200, data: token });
+            return res.json({
+                status: "ok",
+                code: 200,
+                data: token,
+                newAccount: false,
+            });
         } else {
             res.status(500).json({
                 status: "error",

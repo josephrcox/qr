@@ -5,6 +5,7 @@ import {
     canCreateDynamicCodes,
 } from "./entitlement.js";
 import { toast } from "./toast.js";
+import { trackEvent, events, eventProperties } from "./analytics.js";
 
 const upgradeButton = document.getElementById("youUpgrade");
 upgradeButton.addEventListener("click", async () => {
@@ -41,6 +42,7 @@ logout.addEventListener("click", async () => {
     });
     const data = await response.json();
     if (data.status === "ok") {
+        trackEvent(events.logout, {});
         window.location.href = "/login";
     } else {
         toast("Error logging out");
