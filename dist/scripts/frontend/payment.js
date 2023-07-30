@@ -1,3 +1,7 @@
 import { trackEvent, events, eventProperties } from "./analytics.js";
 
-trackEvent(events.visitUpgradePage, {});
+let tracked = false;
+if (!tracked) {
+    tracked = true;
+    trackEvent(events.visitUpgradePage, {});
+}
