@@ -7,6 +7,8 @@ import {
 import { toast } from "./toast.js";
 import { trackEvent, events, eventProperties } from "./analytics.js";
 
+document.onload = trackEvent(events.visitAccountPage, {});
+
 const upgradeButton = document.getElementById("youUpgrade");
 upgradeButton.addEventListener("click", async () => {
     window.location.href = "/payment";

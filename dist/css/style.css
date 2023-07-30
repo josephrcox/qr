@@ -31,7 +31,7 @@
 #youUpgrade,
 #youManage {
     all: unset;
-    color: #16c149;
+    color: var(--primaryGreen);
     padding: 5px;
     background-color: var(--backgroundAlt);
     border-radius: 5px;

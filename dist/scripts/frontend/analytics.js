@@ -3,6 +3,7 @@ import { USER_DATA, loadUserEntitlements } from "./entitlement.js";
 export const events = {
     login: "login",
     register: "register",
+    visitAccountPage: "visit_account_page",
     logout: "logout",
     createCode: "create_code",
     deleteCode: "delete_code",
