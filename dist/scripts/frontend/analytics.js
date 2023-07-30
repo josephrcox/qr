@@ -25,9 +25,6 @@ export const eventProperties = {
 
 export async function trackEvent(event, data) {
     let user = USER_DATA;
-    if (user.plan == undefined || user.plan == null) {
-        user = await loadUserEntitlements();
-    }
     const globalProperties = {
         plan: user.plan,
         email: user.email,
