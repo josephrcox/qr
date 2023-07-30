@@ -7,7 +7,7 @@ export const events = {
     deleteCode: "delete_code",
     copyCodeLink: "copy_code_link",
     updateCodeLink: "edit_code",
-    clickUpgrade: "click_upgrade",
+    visitUpgradePage: "visit_upgrade_page",
     downloadQR: "download_qr",
     toggleDynamic: "toggle_dynamic",
     showToast: "show_toast",

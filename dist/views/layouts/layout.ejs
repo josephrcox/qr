@@ -47,11 +47,6 @@
         <%- body %>
 
         <script>
-            import {
-                trackEvent,
-                events,
-                eventProperties,
-            } from "/dist/js/analytics.js";
             const logo = document.getElementById("logo");
             logo.addEventListener("click", () => {
                 window.location.href = "/";
@@ -61,7 +56,6 @@
             const dialog = document.createElement("dialog");
             upgrade.addEventListener("click", async () => {
                 window.location.href = "/payment";
-                trackEvent(events.clickUpgrade, {});
             });
         </script>
     </body>
