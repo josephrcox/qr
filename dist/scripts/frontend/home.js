@@ -7,6 +7,7 @@ import {
     canCreateDynamicCodes,
 } from "./entitlement.js";
 import { toast } from "./toast.js";
+import { events, eventProperties, trackEvent } from "./analytics.js";
 
 document.onload = await loadUserEntitlements();
 
@@ -96,8 +97,9 @@ async function createCode(type, name, redirect_url) {
     const data = await response.json();
     if (data.status === "ok") {
         loadCodes();
-        gtag("event", "create_code", {
-            type: type,
+        trackEvent(events.createCode, {
+            [eventProperties.type]: type,
+            [eventProperties.isDynamic]: data.isDynamic,
         });
     }
     if (data.message) {
@@ -188,6 +190,9 @@ async function generateCodes(codes) {
             setTimeout(() => {
                 copyLinkButton.innerText = "Copy Link";
             }, 2000);
+            trackEvent(events.copyCodeLink, {
+                [eventProperties.type]: code.type,
+            });
         });
         buttons.appendChild(copyLinkButton);
 
@@ -219,6 +224,9 @@ async function generateCodes(codes) {
                 const data = await response.json();
                 if (data.status === "ok") {
                     loadCodes();
+                    trackEvent(events.updateCodeLink, {
+                        [eventProperties.type]: code.type,
+                    });
                 }
             });
             buttons.appendChild(updateLinkButton);
@@ -248,6 +256,9 @@ async function generateCodes(codes) {
                 a.click();
                 a.remove();
                 window.URL.revokeObjectURL(url);
+                trackEvent(events.downloadQR, {
+                    [eventProperties.type]: code.type,
+                });
             });
             codeDiv.appendChild(QRcode);
         }
@@ -261,6 +272,7 @@ loadCodes();
 dynamicToggle.addEventListener("click", async (event) => {
     const value = dynamicToggle.checked;
     if (value) {
+        trackEvent(events.updateCodeLink, {});
         if (!canCreateDynamicCodes()) {
             toast(
                 "You have reached your dynamic code limit. Upgrade to create more.",
