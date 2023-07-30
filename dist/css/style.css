@@ -199,6 +199,8 @@ td {
     flex-direction: row;
     align-items: center;
     justify-content: center;
+    flex-wrap: wrap;
+    gap: 11px;
 }
 .subButtons {
     display: flex;
@@ -770,9 +772,10 @@ span {
 
 #codesList {
     column-gap: 10px;
-    column-width: 180px;
+    column-width: 193px;
     /* width + gap for each column, times the number of columns */
     margin-inline: 10px;
+    width: 70%;
 }
 
 .code {
@@ -782,13 +785,12 @@ span {
     text-align: center;
     color: var(--darkblue);
     padding: 10px;
-    max-height: 324px;
     box-sizing: border-box; /* this makes padding part of the width, avoids overflow */
     width: calc(
         100% - 23px
     ); /* subtract double the margin to keep the width within the column */
     min-width: 180px;
-    max-width: 200px;
+    max-width: 262px;
 }
 
 .codeName {

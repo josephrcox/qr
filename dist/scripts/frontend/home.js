@@ -115,17 +115,20 @@ async function loadCodes() {
     const codesData = await codesResponse.json();
 
     if (codesData.status == "ok") {
+        codesList.innerHTML = "";
+        generateCodes(codesData.data);
+        generateCodes(codesData.data);
         generateCodes(codesData.data);
     }
 }
 
-function generateCodes(codes) {
+async function generateCodes(codes) {
+    const codesContainer = document.getElementsByClassName("codes")[0];
     const codesList = document.getElementById("codesList");
-    codesList.innerHTML = "";
 
-    var maxColumns = 4; // Set this to whatever maximum number of columns you want
-    var columns = Math.min(codes.length, maxColumns);
-    codesList.style.maxWidth = `calc((180px + 10px) * ${columns})`;
+    // remainder of codes.length / 5
+    var columns = window.innerWidth > 768 ? 5 : 3;
+    codesContainer.style.maxWidth = `calc((193px + 20px) * ${columns})`;
 
     for (const code of codes) {
         const codeDiv = document.createElement("div");
@@ -146,14 +149,79 @@ function generateCodes(codes) {
         const deleteButton = document.createElement("button");
         deleteButton.classList.add("btn", "btn-danger", "deleteButton");
         deleteButton.innerText = "Delete";
-        deleteButton.addEventListener("click", async (event) => {});
+        deleteButton.addEventListener("click", async (event) => {
+            if (!confirm("Are you sure you want to delete this code?")) {
+                return;
+            }
+            event.preventDefault();
+            const response = await fetch("/api/post/deletecode/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    id: code._id,
+                }),
+            });
+            const data = await response.json();
+            if (data.status === "ok") {
+                document.getElementById(code._id).remove();
+            }
+        });
         buttons.appendChild(deleteButton);
 
         const copyLinkButton = document.createElement("button");
         copyLinkButton.classList.add("btn", "copyButton");
         copyLinkButton.innerText = "Copy Link";
-        copyLinkButton.addEventListener("click", async (event) => {});
+        const currentBaseURL = window.location.href.split("/")[2];
+        copyLinkButton.addEventListener("click", async (event) => {
+            event.preventDefault();
+            let url;
+            if (code.type == "qr") {
+                url = `${currentBaseURL}/code?id=${code._id}`;
+            } else {
+                url = url = `${currentBaseURL}/link/${code.short_id}`;
+            }
+            navigator.clipboard.writeText(url);
+            copyLinkButton.innerText = "Copied!";
+            setTimeout(() => {
+                copyLinkButton.innerText = "Copy Link";
+            }, 2000);
+        });
         buttons.appendChild(copyLinkButton);
+
+        if ((USER_DATA.plan > 0 && code.isDynamic) || true) {
+            const updateLinkButton = document.createElement("button");
+            updateLinkButton.classList.add(
+                "btn",
+                "btn-primary",
+                "updateButton"
+            );
+            updateLinkButton.innerText = "Update link";
+            updateLinkButton.dataset.id = code._id;
+            updateLinkButton.addEventListener("click", async (event) => {
+                event.preventDefault();
+                const newURL = prompt("Enter a new URL:");
+                if (newURL === null) {
+                    return;
+                }
+                const response = await fetch("/api/post/updatecode/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        id: updateLinkButton.dataset.id,
+                        newURL: newURL,
+                    }),
+                });
+                const data = await response.json();
+                if (data.status === "ok") {
+                    loadCodes();
+                }
+            });
+            buttons.appendChild(updateLinkButton);
+        }
 
         codeDiv.appendChild(name);
         codeDiv.appendChild(visits);
@@ -165,6 +233,21 @@ function generateCodes(codes) {
             QRcode.classList.add("card-img-top");
             QRcode.addEventListener("click", async () => {});
             QRcode.classList.add("card-img-top");
+            const pngImg = await fetch(code.code);
+            const pngBlob = await pngImg.blob();
+            const qrCodeImageFile = new File([pngBlob], "qr.png", {
+                type: "image/png",
+            });
+            QRcode.addEventListener("click", async () => {
+                const url = window.URL.createObjectURL(qrCodeImageFile);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = "qualitycodesQR.png";
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+            });
             codeDiv.appendChild(QRcode);
         }
 
