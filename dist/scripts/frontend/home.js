@@ -275,7 +275,7 @@ loadCodes();
 dynamicToggle.addEventListener("click", async (event) => {
     const value = dynamicToggle.checked;
     if (value) {
-        trackEvent(events.updateCodeLink, {});
+        trackEvent(events.toggleDynamic, {});
         if (!canCreateDynamicCodes()) {
             toast(
                 "You have reached your dynamic code limit. Upgrade to create more.",
