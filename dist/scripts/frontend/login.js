@@ -27,7 +27,7 @@ submit.addEventListener("click", (e) => {
         .then((data) => {
             console.log(data);
             if (data.code === 200) {
-                if (data.newAccount === false) {
+                if (data.newAccount == false) {
                     trackEvent(events.login, {});
                 } else {
                     trackEvent(events.register, {});

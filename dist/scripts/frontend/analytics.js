@@ -33,7 +33,7 @@ export async function trackEvent(event, data) {
         email: user.email,
     };
     data = { ...globalProperties, ...data };
-    console.info("🛤️ Tracking event", event, data, globalProperties);
+    console.info("🛤️ Tracking event", event, data);
     if (window.gtag) {
         window.gtag("event", event, data, globalProperties);
     }
