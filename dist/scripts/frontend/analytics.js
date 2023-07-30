@@ -1,7 +1,8 @@
-import { USER_DATA } from "./entitlement.js";
+import { USER_DATA, loadUserEntitlements } from "./entitlement.js";
 
 export const events = {
     login: "login",
+    register: "register",
     logout: "logout",
     createCode: "create_code",
     deleteCode: "delete_code",
@@ -21,15 +22,18 @@ export const eventProperties = {
     isDynamic: "is_dynamic",
 };
 
-export function trackEvent(event, data) {
+export async function trackEvent(event, data) {
+    let user = USER_DATA;
+    if (user.plan == undefined || user.plan == null) {
+        user = await loadUserEntitlements();
+    }
     const globalProperties = {
-        plan: USER_DATA.plan,
-        userId: USER_DATA.id,
+        plan: user.plan,
+        email: user.email,
     };
-    // merge global properties with event properties (in data)
     data = { ...globalProperties, ...data };
-
+    console.info("🛤️ Tracking event", event, data, globalProperties);
     if (window.gtag) {
-        window.gtag("event", event, data);
+        window.gtag("event", event, data, globalProperties);
     }
 }
