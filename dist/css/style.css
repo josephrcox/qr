@@ -236,7 +236,7 @@ td {
 
 label {
     font-size: 0.7em;
-    color: #33333373;
+    color: var(--lightGreen);
     margin-bottom: 10px;
 }
 
@@ -758,6 +758,17 @@ input:checked + .dynamicToggle:before {
 span {
     color: var(--primaryGreen);
     font-weight: 500;
+}
+
+input#searchCodes {
+    font-size: 16px;
+    all: unset;
+    background-color: white;
+    padding: 13px;
+    color: black;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    width: 200px;
 }
 
 .row {

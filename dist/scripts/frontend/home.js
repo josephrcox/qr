@@ -130,6 +130,9 @@ async function generateCodes(codes) {
     const codesList = document.getElementById("codesList");
 
     // remainder of codes.length / 5
+    if (codes.length <= 2) {
+        codesList.style.display = "flex";
+    }
     var columns = window.innerWidth > 768 ? 5 : 3;
     codesContainer.style.maxWidth = `calc((193px + 20px) * ${columns})`;
 
@@ -137,6 +140,7 @@ async function generateCodes(codes) {
         const codeDiv = document.createElement("div");
         codeDiv.classList.add("code", "roundedBox");
         codeDiv.id = code._id;
+        codeDiv.dataset.url = code.redirect_url;
 
         const name = document.createElement("h3");
         name.innerText = code.name;
@@ -283,6 +287,31 @@ dynamicToggle.addEventListener("click", async (event) => {
             );
             dynamicToggle.checked = false;
             return;
+        }
+    }
+});
+
+const searchCodes = document.getElementById("searchCodes");
+searchCodes.addEventListener("input", async (event) => {
+    const query = searchCodes.value;
+
+    const codesByName = document.getElementsByClassName("codeName");
+    // dataset url
+    const codesByURL = document.getElementsByClassName("code");
+
+    for (const code of codesByName) {
+        if (code.innerText.toLowerCase().includes(query.toLowerCase())) {
+            code.parentElement.style.display = "";
+        } else {
+            code.parentElement.style.display = "none";
+        }
+    }
+
+    for (const code of codesByURL) {
+        if (code.dataset.url.toLowerCase().includes(query.toLowerCase())) {
+            code.style.display = "";
+        } else {
+            code.style.display = "none";
         }
     }
 });

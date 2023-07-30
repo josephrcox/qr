@@ -185,6 +185,22 @@ app.post("/api/post/createcode/", isAuth, async (req, res) => {
 
     const userEmail = await getUserData(req);
     // generate a short id that has not been used already in other codes
+
+    if (
+        redirect_url == undefined ||
+        redirect_url.length < 3 ||
+        name == undefined ||
+        name.length < 3 ||
+        type == undefined ||
+        type.length < 3
+    ) {
+        return res.json({
+            status: "error",
+            code: 400,
+            error: "Invalid URL",
+        });
+    }
+
     let continueTrying = true;
     let short_id = "";
     while (continueTrying) {
