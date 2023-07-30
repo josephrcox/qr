@@ -1,4 +1,3 @@
-import { track } from "cordova/src/telemetry";
 import { trackEvent, events, eventProperties } from "./analytics.js";
 
 const email = document.querySelector('input[name="email"]');
