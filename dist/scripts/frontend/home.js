@@ -96,6 +96,9 @@ async function createCode(type, name, redirect_url) {
     const data = await response.json();
     if (data.status === "ok") {
         loadCodes();
+        gtag("event", "create code", {
+            type: type,
+        });
     }
     if (data.message) {
         toast(data.message, true);
