@@ -170,6 +170,9 @@ async function generateCodes(codes) {
             if (data.status === "ok") {
                 document.getElementById(code._id).remove();
             }
+            trackEvent(events.deleteCode, {
+                [eventProperties.type]: code.type,
+            });
         });
         buttons.appendChild(deleteButton);
 
