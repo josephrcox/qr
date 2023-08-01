@@ -5,6 +5,7 @@ if (process.env.NODE_ENV !== "production") {
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const express = require("express");
+
 const app = express();
 const expressLayouts = require("express-ejs-layouts");
 const { response } = require("express");
@@ -72,11 +73,12 @@ function isAuth(req, res, next) {
     try {
         let token = req.cookies.token;
         const verified = jwt.verify(token, process.env.JWT_SECRET);
-
+        console.log(verified);
         if (verified) {
             return next();
         }
     } catch (e) {
+        console.log(e);
         res.clearCookie("token");
         return res.redirect("/login");
     }
@@ -196,7 +198,7 @@ app.post("/api/post/createcode/", isAuth, async (req, res) => {
         name == undefined ||
         name.length < 3 ||
         type == undefined ||
-        type.length < 3
+        type.length < 2
     ) {
         return res.json({
             status: "error",
@@ -301,79 +303,78 @@ app.get("/api/get/codes", isAuth, async (req, res) => {
 
 //// Takes an email + pw and logs in or creates a new user
 app.post("/api/post/login", async (req, res) => {
-    const { email, plainTextPassword } = req.body;
-    const user = await User.findOne({ email: email }).lean();
-    const hashedPassword = await bcrypt.hash(plainTextPassword, 10);
+    const { email, authToken } = req.body;
 
+    // decode jwt token rs256, with public key https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com
+    const decoded = jwt.decode(authToken, { complete: true });
+    console.log(decoded);
+    if (decoded == null) {
+        return res.json({
+            status: "error",
+            code: 400,
+            error: "Invalid token",
+        });
+    }
+    const user = await User.findOne({
+        email: decoded.payload.email,
+        googleUID: decoded.payload.user_id,
+    });
     if (!user) {
-        if (!newUserChecks(email, plainTextPassword)) {
-            return res.json({
-                status: "error",
-                code: 400,
-                error: "Invalid email and/or password",
-            });
-        }
         try {
-            const response = await User.create({
-                password: hashedPassword,
-                email: email,
+            await User.create({
+                googleUID: decoded.payload.user_id,
+                email: decoded.payload.email,
+                plan: 0,
             });
+
             const token = jwt.sign(
                 {
-                    id: response._id,
-                    email: response.email,
+                    email: decoded.payload.email,
+                    id: decoded.payload.user_id,
                 },
                 JWT_SECRET,
                 { expiresIn: "30days" }
             );
-
             res.cookie("token", token, {
                 httpOnly: true,
             });
+
             checkStripeStatus(email);
 
             return res.json({
                 status: "ok",
                 code: 200,
-                data: token,
+                token: token,
                 newAccount: true,
             });
         } catch (error) {
             return res.json({
                 status: "error",
                 code: 400,
-                error: "Unknown error code",
+                error: error,
             });
         }
     } else {
-        if (await bcrypt.compare(plainTextPassword, user.password)) {
-            const token = jwt.sign(
-                {
-                    id: user._id,
-                    email: user.email,
-                },
-                JWT_SECRET,
-                { expiresIn: "30days" }
-            );
+        checkStripeStatus(user.email);
 
-            res.cookie("token", token, {
-                httpOnly: true,
-            });
+        const token = jwt.sign(
+            {
+                email: decoded.payload.email,
+                id: decoded.payload.user_id,
+            },
+            JWT_SECRET,
+            { expiresIn: "30days" }
+        );
+        res.cookie("token", token, {
+            httpOnly: true,
+        });
 
-            checkStripeStatus(user.email);
-
-            return res.json({
-                status: "ok",
-                code: 200,
-                data: token,
-                newAccount: false,
-            });
-        } else {
-            res.status(500).json({
-                status: "error",
-                error: "Invalid username/password",
-            });
-        }
+        return res.json({
+            status: "ok",
+            code: 200,
+            data: token,
+            newAccount: false,
+        });
     }
 });
 

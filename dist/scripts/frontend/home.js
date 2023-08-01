@@ -128,14 +128,6 @@ async function loadCodes() {
 async function generateCodes(codes) {
     const codesContainer = document.getElementsByClassName("codes")[0];
     const codesList = document.getElementById("codesList");
-
-    // remainder of codes.length / 5
-    if (codes.length <= 2) {
-        codesList.style.display = "flex";
-    }
-    var columns = window.innerWidth > 768 ? 5 : 3;
-    codesContainer.style.maxWidth = `calc((193px + 20px) * ${columns})`;
-
     for (const code of codes) {
         const codeDiv = document.createElement("div");
         codeDiv.classList.add("code", "roundedBox");

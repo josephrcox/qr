@@ -188,6 +188,16 @@ td {
     padding-bottom: 5px;
 }
 
+.black {
+    color: #333;
+}
+
+#google {
+    /* You can adjust this size based on your preference */
+    max-width: 140px;
+    cursor: pointer;
+}
+
 #logo {
     /* You can adjust this size based on your preference */
     max-width: 140px;
@@ -782,11 +792,11 @@ input#searchCodes {
 }
 
 #codesList {
-    column-gap: 10px;
-    column-width: 193px;
-    /* width + gap for each column, times the number of columns */
-    margin-inline: 10px;
-    width: 70%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 80vw;
 }
 
 .code {

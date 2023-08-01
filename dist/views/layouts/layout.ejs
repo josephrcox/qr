@@ -30,6 +30,17 @@
 
             gtag("config", "G-VXP7L6LG3X");
         </script>
+        <script
+            src="https://accounts.google.com/gsi/client"
+            async
+            defer
+        ></script>
+        <script src="https://www.gstatic.com/firebasejs/ui/6.0.1/firebase-ui-auth.js"></script>
+        <link
+            type="text/css"
+            rel="stylesheet"
+            href="https://www.gstatic.com/firebasejs/ui/6.0.1/firebase-ui-auth.css"
+        />
         <script type="module">
             // Import the functions you need from the SDKs you need
             import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
@@ -41,14 +52,13 @@
             // For Firebase JS SDK v7.20.0 and later, measurementId is optional
             const firebaseConfig = {
                 apiKey: "AIzaSyDu5uUJ8PrHyQU2RAVeKyo127S6tRiefZk",
-                authDomain: "qualitycodes.io",
+                authDomain: "qualitycodes-4cd20.firebaseapp.com",
                 projectId: "qualitycodes-4cd20",
                 storageBucket: "qualitycodes-4cd20.appspot.com",
                 messagingSenderId: "137725512116",
                 appId: "1:137725512116:web:748cc6666c306632524ae1",
                 measurementId: "G-R8HQ0XZ3JF",
             };
-
             // Initialize Firebase
             const app = initializeApp(firebaseConfig);
             const analytics = getAnalytics(app);
