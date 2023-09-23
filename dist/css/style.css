@@ -388,6 +388,8 @@ label {
 
 .card-img-top {
     object-fit: contain;
+    margin-top: 8px;
+    border: 1px solid #c7c7c7;
 }
 
 .card-body {
