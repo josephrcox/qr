@@ -115,10 +115,11 @@ app.get("/code", async (req, res) => {
     let user_country = "undefined";
     let user_city = "undefined";
     let user_region = "undefined";
+    let ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
     console.log("DEBUG");
     console.log(req);
     try {
-        let userdata = await getgeoip(req.ip);
+        let userdata = await getgeoip(ip);
         if (userdata.country_name != undefined) {
             user_country = userdata.country_name;
             user_city = userdata.city;
