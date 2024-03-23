@@ -320,12 +320,12 @@ app.post("/api/post/login", async (req, res) => {
     }
     const user = await User.findOne({
         email: decoded.payload.email,
-        googleAuthId: decoded.payload.user_id,
+        googleUID: decoded.payload.user_id,
     });
     if (!user) {
         try {
             await User.create({
-                googleAuthId: decoded.payload.user_id,
+                googleUID: decoded.payload.user_id,
                 email: decoded.payload.email,
                 plan: 0,
             });
