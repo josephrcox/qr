@@ -130,15 +130,15 @@ app.get("/code", async (req, res) => {
     }
 
     dbResponse.visitor_metadata.push({
-        ip: req.ip,
+        ip: ip,
         time: new Date(),
-        browser: ua.browser.name,
-        os: ua.os.name,
-        device: ua.device.model,
-        user_country: user_country,
-        user_city: user_city,
-        user_region: user_region,
-        link: dbResponse.redirect_url,
+        browser: ua.browser.name ?? "unknown",
+        os: ua.os.name ?? "unknown",
+        device: ua.device.model ?? "unknown",
+        user_country: user_country ?? "unknown",
+        user_city: user_city ?? "unknown",
+        user_region: user_region ?? "unknown",
+        link: dbResponse.redirect_url ?? "unknown",
     });
     await dbResponse.save();
     res.redirect(dbResponse.redirect_url);
@@ -482,6 +482,7 @@ function checkStripeStatus(email) {
                     email: customer.email,
                 });
                 user.plan = planNumber;
+                console.log(user);
                 await user.save();
             }
         }
