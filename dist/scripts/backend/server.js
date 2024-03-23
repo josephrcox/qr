@@ -115,6 +115,8 @@ app.get("/code", async (req, res) => {
     let user_country = "undefined";
     let user_city = "undefined";
     let user_region = "undefined";
+    console.log("DEBUG");
+    console.log(req);
     try {
         let userdata = await getgeoip(req.ip);
         if (userdata.country_name != undefined) {
@@ -317,12 +319,12 @@ app.post("/api/post/login", async (req, res) => {
     }
     const user = await User.findOne({
         email: decoded.payload.email,
-        googleUID: decoded.payload.user_id,
+        googleAuthId: decoded.payload.user_id,
     });
     if (!user) {
         try {
             await User.create({
-                googleUID: decoded.payload.user_id,
+                googleAuthId: decoded.payload.user_id,
                 email: decoded.payload.email,
                 plan: 0,
             });
